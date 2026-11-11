@@ -59,7 +59,7 @@ export function AbcXyzMatrix({ cells }: { cells: MatrixCellVM[] }) {
                       p: 1.25,
                       borderColor: "#E3E6EB",
                       backgroundColor: empty ? "#FCFCFD" : ABC_BACKGROUND[abc],
-                      borderRadius: 2,
+                      borderRadius: 0.5,
                     }}
                   >
                     <Typography sx={{ fontSize: 18, fontWeight: 700, lineHeight: 1.1 }}>

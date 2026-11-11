@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -24,22 +25,7 @@ export function LoginView({ accounts }: { accounts: DemoAccount[] }) {
     >
       <Box sx={{ width: "100%", maxWidth: 1120 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>
-          <Box
-            sx={{
-              width: 46,
-              height: 46,
-              borderRadius: "12px",
-              backgroundColor: "primary.main",
-              color: "#1A1A1A",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 700,
-              fontSize: 18,
-            }}
-          >
-            ФП
-          </Box>
+          <Image src="/logo.png" alt="ФотоПринт" width={46} height={46} priority />
           <Box>
             <Typography sx={{ fontSize: 22, fontWeight: 700, lineHeight: 1.2 }}>
               ФотоПринт · Платформа управления

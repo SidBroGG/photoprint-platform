@@ -25,7 +25,7 @@ export function ForecastRiskList({
         <Paper
           key={risk.id}
           variant="outlined"
-          sx={{ p: 1.75, borderColor: "#E3E6EB", borderRadius: 2.5 }}
+          sx={{ p: 1.75, borderColor: "#E3E6EB", borderRadius: 0.5 }}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1.5 }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{risk.title}</Typography>

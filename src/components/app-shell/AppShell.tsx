@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import NextLink from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -81,23 +82,7 @@ export function AppShell({
   const drawer = (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Box sx={{ px: 2.5, pt: 2.5, pb: 2, display: "flex", alignItems: "center", gap: 1.25 }}>
-        <Box
-          sx={{
-            width: 38,
-            height: 38,
-            borderRadius: "10px",
-            backgroundColor: "primary.main",
-            color: "#1A1A1A",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: 700,
-            fontSize: 15,
-            flexShrink: 0,
-          }}
-        >
-          ФП
-        </Box>
+        <Image src="/logo.png" alt="ФотоПринт" width={38} height={38} priority />
         <Box>
           <Typography sx={{ fontWeight: 700, fontSize: 15, lineHeight: 1.2 }}>
             ФотоПринт
@@ -121,7 +106,7 @@ export function AppShell({
               selected={selected}
               onClick={() => setMobileOpen(false)}
               sx={{
-                borderRadius: 2,
+                borderRadius: 0.5,
                 mb: 0.25,
                 minHeight: 42,
                 borderLeft: "3px solid transparent",
@@ -214,7 +199,7 @@ export function AppShell({
             </Typography>
             <ButtonBase
               onClick={(event) => setMenuAnchor(event.currentTarget)}
-              sx={{ borderRadius: 2, px: 1, py: 0.5, gap: 1 }}
+              sx={{ borderRadius: 0.5, px: 1, py: 0.5, gap: 1 }}
               aria-label="Меню пользователя"
             >
               <Avatar

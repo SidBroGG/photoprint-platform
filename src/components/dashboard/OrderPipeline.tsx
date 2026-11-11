@@ -18,7 +18,7 @@ export function OrderPipeline({ stages }: { stages: PipelineVM[] }) {
         <Paper
           key={stage.key}
           variant="outlined"
-          sx={{ px: 1.5, py: 1.4, borderColor: "#E3E6EB", borderRadius: 2.5 }}
+          sx={{ px: 1.5, py: 1.4, borderColor: "#E3E6EB", borderRadius: 0.5 }}
         >
           <Typography
             variant="caption"

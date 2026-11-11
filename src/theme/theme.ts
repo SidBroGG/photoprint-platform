@@ -28,7 +28,7 @@ export const theme = createTheme({
     divider: "#E3E6EB",
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 4,
   },
   typography: {
     fontFamily: 'Roboto, "Helvetica Neue", Arial, sans-serif',
@@ -79,14 +79,14 @@ export const theme = createTheme({
         root: {
           border: "1px solid #E3E6EB",
           boxShadow: "none",
-          borderRadius: 14,
+          borderRadius: 6,
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 10,
+          borderRadius: 4,
         },
         containedPrimary: {
           color: "#1A1A1A",
@@ -96,7 +96,7 @@ export const theme = createTheme({
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 3,
           fontWeight: 500,
         },
       },
@@ -121,11 +121,11 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           height: 8,
-          borderRadius: 999,
+          borderRadius: 2,
           backgroundColor: "#EEF0F3",
         },
         bar: {
-          borderRadius: 999,
+          borderRadius: 2,
         },
       },
     },

@@ -34,6 +34,21 @@ bun test
 bun run lint
 ```
 
+### Быстрый вход и прямые ссылки
+
+Пароли не нужны: ссылка вида `/api/demo-login/<аккаунт>` сразу ставит сессию и открывает домашний раздел роли. Параметр `next` ведёт на конкретную страницу без переходов по меню (проверяется доступ роли).
+
+```text
+http://localhost:3000/api/demo-login/ceo
+http://localhost:3000/api/demo-login/sales
+http://localhost:3000/api/demo-login/production
+http://localhost:3000/api/demo-login/service
+http://localhost:3000/api/demo-login/prod-spec
+http://localhost:3000/api/demo-login/service-spec
+http://localhost:3000/api/demo-login/ceo?next=/production
+http://localhost:3000/api/demo-login/sales?next=/customers
+```
+
 ## Демо-аккаунты
 
 Паролей нет: на `/login` выберите карточку аккаунта. Сервер ставит httpOnly-cookie `pp_session` на 8 часов и определяет роль только на сервере.

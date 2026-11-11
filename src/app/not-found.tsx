@@ -19,7 +19,7 @@ export default function NotFound() {
           width: "100%",
           background: "#FFFFFF",
           border: "1px solid #E3E6EB",
-          borderRadius: 14,
+          borderRadius: 6,
           padding: 28,
           textAlign: "center",
         }}
@@ -39,7 +39,7 @@ export default function NotFound() {
             display: "inline-block",
             background: "#FFC400",
             color: "#1A1A1A",
-            borderRadius: 10,
+            borderRadius: 4,
             padding: "10px 18px",
             fontSize: 14,
             fontWeight: 600,
