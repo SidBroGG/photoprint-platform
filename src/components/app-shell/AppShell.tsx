@@ -20,6 +20,7 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import ButtonBase from "@mui/material/ButtonBase";
 import MenuIcon from "@mui/icons-material/Menu";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import DashboardOutlined from "@mui/icons-material/DashboardOutlined";
 import ReceiptLongOutlined from "@mui/icons-material/ReceiptLongOutlined";
 import GroupsOutlined from "@mui/icons-material/GroupsOutlined";
@@ -67,6 +68,7 @@ export function AppShell({
 }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(true);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
   const activeItem = navItems
@@ -131,11 +133,6 @@ export function AppShell({
           );
         })}
       </List>
-      <Box sx={{ px: 2.5, py: 2, borderTop: "1px solid #E3E6EB" }}>
-        <Typography variant="caption" color="text.secondary">
-          Демо-режим · мок-данные
-        </Typography>
-      </Box>
     </Box>
   );
 
@@ -143,7 +140,15 @@ export function AppShell({
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <Box
         component="nav"
-        sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+        sx={(theme) => ({
+          width: { md: desktopOpen ? DRAWER_WIDTH : 0 },
+          flexShrink: { md: 0 },
+          overflowX: "hidden",
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        })}
         aria-label="Основная навигация"
       >
         <Drawer
@@ -159,8 +164,8 @@ export function AppShell({
           {drawer}
         </Drawer>
         <Drawer
-          variant="permanent"
-          open
+          variant="persistent"
+          open={desktopOpen}
           sx={{
             display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
@@ -193,6 +198,15 @@ export function AppShell({
               aria-label="Открыть меню"
             >
               <MenuIcon />
+            </IconButton>
+            <IconButton
+              edge="start"
+              onClick={() => setDesktopOpen((open) => !open)}
+              sx={{ display: { xs: "none", md: "inline-flex" }, ml: -1 }}
+              aria-label={desktopOpen ? "Скрыть меню" : "Показать меню"}
+              aria-expanded={desktopOpen}
+            >
+              {desktopOpen ? <MenuOpenIcon /> : <MenuIcon />}
             </IconButton>
             <Typography sx={{ fontSize: 17, fontWeight: 700, flexGrow: 1 }}>
               {pageTitle}
