@@ -1,11 +1,13 @@
 "use client";
 
+import NextLink from "next/link";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { KpiCard } from "@/components/common/KpiCard";
 import { PageHeader } from "@/components/common/PageHeader";
 import { SectionCard } from "@/components/common/SectionCard";
-import { AlertList } from "@/components/dashboard/AlertList";
 import { OrderPipeline } from "@/components/dashboard/OrderPipeline";
 import { ForecastRiskList } from "@/components/dashboard/ForecastRiskList";
 import type { DashboardView } from "@/lib/view/dashboard";
@@ -39,17 +41,26 @@ export function DashboardScreen({ data }: { data: DashboardView }) {
           </SectionCard>
           <SectionCard
             title="Риск прогноза"
-            subtitle="Сигналы на горизонте 1–2 недели по данным прогноза."
+            subtitle="Прогнозные риски на горизонте 1–2 недели по данным прогноза."
           >
             <ForecastRiskList risks={data.forecastRisks} />
           </SectionCard>
         </Box>
 
         <SectionCard
-          title="Сигналы"
-          subtitle="Что произошло, где отклонение, причина и рекомендуемое действие. Отметка «В работе» хранится локально в браузере."
+          title="Канбан проблем"
+          subtitle="Задачи по направлениям: критичность, статус и ответственный."
+          action={
+            <Button component={NextLink} href="/issues" variant="contained" size="small">
+              Открыть канбан
+            </Button>
+          }
         >
-          <AlertList alerts={data.alerts} />
+          <Typography variant="body2" color="text.secondary">
+            Закрепите задачу за собой, задайте краткое описание и критичность, переведите её в
+            работу или на проверку. Генеральный директор видит все процессы по категориям,
+            руководители и специалисты — только свои.
+          </Typography>
         </SectionCard>
       </Stack>
     </>

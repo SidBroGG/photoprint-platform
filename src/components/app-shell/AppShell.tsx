@@ -22,6 +22,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import DashboardOutlined from "@mui/icons-material/DashboardOutlined";
+import ViewKanbanOutlined from "@mui/icons-material/ViewKanbanOutlined";
 import ReceiptLongOutlined from "@mui/icons-material/ReceiptLongOutlined";
 import GroupsOutlined from "@mui/icons-material/GroupsOutlined";
 import PhotoAlbumOutlined from "@mui/icons-material/PhotoAlbumOutlined";
@@ -39,6 +40,7 @@ const DRAWER_WIDTH = 248;
 
 const ICONS: Record<string, ReactNode> = {
   dashboard: <DashboardOutlined />,
+  board: <ViewKanbanOutlined />,
   orders: <ReceiptLongOutlined />,
   customers: <GroupsOutlined />,
   products: <PhotoAlbumOutlined />,

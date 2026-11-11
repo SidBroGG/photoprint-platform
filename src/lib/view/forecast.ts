@@ -162,7 +162,7 @@ export function getForecastScreenView(
       {
         label: "Риск SLA",
         value: String(forecast.risks.filter((risk) => risk.domain === "service").length),
-        hint: "Сигналы прогноза по сервису",
+        hint: "Риски прогноза по сервису",
         tone: forecast.risks.some((risk) => risk.domain === "service") ? "warning" : "success",
       },
       {

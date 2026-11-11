@@ -1,7 +1,6 @@
 import type { DemoAccount } from "@/lib/auth/roles";
 import { canSeeOrderMoney, dashboardDomains, type DashboardDomain } from "@/lib/auth/roles";
 import { getDataset } from "@/lib/data/store";
-import { buildAlerts, type AlertDomain } from "@/lib/analytics/alerts";
 import { buildForecast } from "@/lib/analytics/forecast";
 import {
   countOrdersToday,
@@ -29,20 +28,6 @@ export interface PipelineVM {
   amount?: string;
 }
 
-export interface AlertVM {
-  id: string;
-  severity: "critical" | "warning";
-  severityLabel: string;
-  title: string;
-  where: string;
-  reason: string;
-  action: string;
-  owner: string;
-  due: string;
-  href: string;
-  domainLabel: string;
-}
-
 export interface ForecastRiskVM {
   id: string;
   title: string;
@@ -58,16 +43,8 @@ export interface DashboardView {
   kpis: KpiVM[];
   stages: PipelineVM[];
   showAmounts: boolean;
-  alerts: AlertVM[];
   forecastRisks: ForecastRiskVM[];
 }
-
-const DOMAIN_LABELS: Record<AlertDomain, string> = {
-  sales: "Продажи",
-  production: "Производство",
-  logistics: "Логистика",
-  service: "Сервис",
-};
 
 const ROLE_NOTES: Record<string, string> = {
   ceo: "Полный срез компании: продажи, финансы, производство, логистика и сервис.",
@@ -242,29 +219,6 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
       amount: showAmounts ? formatMoneyCompact(bucket.amount) : undefined,
     }));
 
-  const allowedDomains = new Set<AlertDomain>();
-  if (has("sales") || has("finance")) allowedDomains.add("sales");
-  if (has("production")) allowedDomains.add("production");
-  if (has("logistics")) allowedDomains.add("logistics");
-  if (has("service")) allowedDomains.add("service");
-
-  const alerts: AlertVM[] = buildAlerts(dataset, now)
-    .filter((alert) => allowedDomains.has(alert.domain))
-    .slice(0, 20)
-    .map((alert) => ({
-      id: alert.id,
-      severity: alert.severity,
-      severityLabel: alert.severity === "critical" ? "Критично" : "Предупреждение",
-      title: alert.title,
-      where: alert.where,
-      reason: alert.reason,
-      action: alert.action,
-      owner: alert.owner,
-      due: formatDateTime(alert.due),
-      href: alert.href,
-      domainLabel: DOMAIN_LABELS[alert.domain],
-    }));
-
   const forecast = buildForecast(dataset, now);
   const forecastRisks: ForecastRiskVM[] = forecast.risks
     .filter((risk) => (risk.domain === "production" ? has("production") : has("service")))
@@ -284,7 +238,6 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
     kpis: isCeo ? ceoKpis : kpis,
     stages,
     showAmounts,
-    alerts,
     forecastRisks,
   };
 }

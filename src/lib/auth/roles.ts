@@ -10,6 +10,7 @@ export type Role =
 
 export type PageKey =
   | "dashboard"
+  | "issues"
   | "orders"
   | "customers"
   | "products"
@@ -89,6 +90,14 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
 
 export const PAGE_ACCESS: Record<PageKey, Role[]> = {
   dashboard: ["ceo", "sales", "production", "logistics_service"],
+  issues: [
+    "ceo",
+    "sales",
+    "production",
+    "logistics_service",
+    "production_specialist",
+    "service_specialist",
+  ],
   orders: ["ceo", "sales", "production", "logistics_service"],
   customers: ["ceo", "sales"],
   products: ["ceo", "sales"],
@@ -117,6 +126,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Обзор", page: "dashboard", icon: "dashboard" },
+  { href: "/issues", label: "Канбан", page: "issues", icon: "board" },
   { href: "/orders", label: "Заказы", page: "orders", icon: "orders" },
   { href: "/customers", label: "Клиенты", page: "customers", icon: "customers" },
   { href: "/products", label: "Продукты", page: "products", icon: "products" },

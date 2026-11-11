@@ -15,6 +15,7 @@ import {
 
 const ALL_PAGES: PageKey[] = [
   "dashboard",
+  "issues",
   "orders",
   "customers",
   "products",
@@ -59,13 +60,19 @@ describe("page access matrix", () => {
     expect(canAccess("logistics_service", "production")).toBe(false);
     expect(canAccess("logistics_service", "customers")).toBe(false);
     expect(canAccess("logistics_service", "products")).toBe(false);
+    expect(canAccess("ceo", "issues")).toBe(true);
+    expect(canAccess("sales", "issues")).toBe(true);
+    expect(canAccess("production", "issues")).toBe(true);
+    expect(canAccess("logistics_service", "issues")).toBe(true);
   });
 
   test("restricts specialists to their own operational page", () => {
     expect(canAccess("production_specialist", "dashboard")).toBe(false);
+    expect(canAccess("production_specialist", "issues")).toBe(true);
     expect(canAccess("production_specialist", "production")).toBe(true);
     expect(canAccess("production_specialist", "orders")).toBe(false);
     expect(canAccess("production_specialist", "personnel")).toBe(false);
+    expect(canAccess("service_specialist", "issues")).toBe(true);
     expect(canAccess("service_specialist", "service")).toBe(true);
     expect(canAccess("service_specialist", "dashboard")).toBe(false);
     expect(canAccess("service_specialist", "logistics")).toBe(false);
@@ -104,6 +111,7 @@ describe("role scopes", () => {
     const salesNav = navItemsForRole("sales").map((item) => item.page);
     expect(salesNav).toEqual([
       "dashboard",
+      "issues",
       "orders",
       "customers",
       "products",
@@ -111,9 +119,11 @@ describe("role scopes", () => {
       "forecast",
     ]);
     expect(navItemsForRole("production_specialist").map((item) => item.page)).toEqual([
+      "issues",
       "production",
     ]);
     expect(navItemsForRole("service_specialist").map((item) => item.page)).toEqual([
+      "issues",
       "service",
     ]);
   });
