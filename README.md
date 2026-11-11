@@ -12,18 +12,20 @@
 
 ## Запуск
 
+Production-режим: все страницы компилируются на этапе сборки и открываются сразу.
+
 ```powershell
 bun install
-bun dev
+bun run build
+bun run start
 ```
 
 Откройте `http://localhost:3000` — произойдёт редирект на экран демо-входа.
 
-Проверка production-сборки:
+Режим разработки с компиляцией страниц по мере открытия:
 
 ```powershell
-bun run build
-bun run start
+bun dev
 ```
 
 Проверки качества:
@@ -32,21 +34,6 @@ bun run start
 bun run typecheck
 bun test
 bun run lint
-```
-
-### Быстрый вход и прямые ссылки
-
-Пароли не нужны: ссылка вида `/api/demo-login/<аккаунт>` сразу ставит сессию и открывает домашний раздел роли. Параметр `next` ведёт на конкретную страницу без переходов по меню (проверяется доступ роли).
-
-```text
-http://localhost:3000/api/demo-login/ceo
-http://localhost:3000/api/demo-login/sales
-http://localhost:3000/api/demo-login/production
-http://localhost:3000/api/demo-login/service
-http://localhost:3000/api/demo-login/prod-spec
-http://localhost:3000/api/demo-login/service-spec
-http://localhost:3000/api/demo-login/ceo?next=/production
-http://localhost:3000/api/demo-login/sales?next=/customers
 ```
 
 ## Демо-аккаунты
