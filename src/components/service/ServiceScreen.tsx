@@ -28,10 +28,7 @@ export function ServiceScreen({ data }: { data: ServiceScreenView }) {
           title="Обращения"
           subtitle="Просроченные SLA выделены. Первый ответ фиксируется по регламенту."
         >
-          <TicketsTable
-            rows={data.rows}
-            canOpenOrder={data.mode !== "specialist"}
-          />
+          <TicketsTable rows={data.rows} />
         </SectionCard>
       </Stack>
     </>

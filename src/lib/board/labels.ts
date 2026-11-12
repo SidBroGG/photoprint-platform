@@ -40,12 +40,9 @@ export function visibleIssueAreas(role: Role): IssueArea[] {
     case "sales":
       return ["sales"];
     case "production":
-    case "production_specialist":
       return ["production"];
     case "logistics_service":
       return ["logistics", "service"];
-    case "service_specialist":
-      return ["service"];
   }
 }
 

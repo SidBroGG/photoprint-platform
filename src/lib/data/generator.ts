@@ -723,25 +723,7 @@ export function createDataset(now: Date = new Date(), seed: number = DATA_SEED):
     });
   }
 
-  // 8. Guaranteed queue for the print specialist demo account (e08).
-  for (let i = 0; i < 2; i += 1) {
-    const createdAt = addHours(now, -8 - i * 2);
-    createOrder({
-      client: safeClients[(i * 6 + 3) % safeClients.length]!,
-      product: activeProducts[(i * 5 + 2) % activeProducts.length]!,
-      quantity: 1,
-      createdAt,
-      paymentStatus: "paid",
-      paidAt: addMinutes(createdAt, 50),
-      stage: "print",
-      dueAt: moscowDate(todayIndex + 1, 18, 0),
-      productionCompletedAt: null,
-      productionEmployeeId: "e08",
-      deliveryMethod: "delivery",
-    });
-  }
-
-  // 9. Guaranteed delayed shipments.
+  // 8. Guaranteed delayed shipments.
   for (let i = 0; i < 3; i += 1) {
     const createdAt = addDays(now, -9 + i);
     const dueAt = addHours(createdAt, 30);
@@ -769,7 +751,7 @@ export function createDataset(now: Date = new Date(), seed: number = DATA_SEED):
     });
   }
 
-  // 10. Support tickets: closed history plus active overdue and in-SLA requests.
+  // 9. Support tickets: closed history plus active overdue and in-SLA requests.
   const deliveredOrders = orders.filter(
     (order) => order.stage === "delivered" && order.deliveredAt !== null,
   );

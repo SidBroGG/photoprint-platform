@@ -13,20 +13,14 @@ const COLUMNS: DataColumn[] = [
   { key: "assignee", label: "Исполнитель", width: 170 },
 ];
 
-export function TicketsTable({
-  rows,
-  canOpenOrder = true,
-}: {
-  rows: ServiceRowVM[];
-  canOpenOrder?: boolean;
-}) {
+export function TicketsTable({ rows }: { rows: ServiceRowVM[] }) {
   const data: DataRow[] = rows.map((row) => ({
     id: row.id,
     cells: {
       topic: { text: row.topic, secondary: row.id },
       client: {
         text: row.clientName,
-        href: canOpenOrder ? `/orders/${row.orderId}` : undefined,
+        href: `/orders/${row.orderId}`,
         secondary: row.orderId,
       },
       opened: row.openedLabel,

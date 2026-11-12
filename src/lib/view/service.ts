@@ -1,4 +1,3 @@
-import type { DemoAccount } from "@/lib/auth/roles";
 import { getDataset } from "@/lib/data/store";
 import { serviceView } from "@/lib/analytics/operations";
 import { TICKET_STATUS_LABELS, ticketTone, type Tone } from "@/lib/labels";
@@ -20,20 +19,15 @@ export interface ServiceRowVM {
 }
 
 export interface ServiceScreenView {
-  mode: "company" | "specialist";
   meta: string;
   note: string;
   kpis: KpiVM[];
   rows: ServiceRowVM[];
 }
 
-export function getServiceScreenView(
-  account: DemoAccount,
-  now: Date = new Date(),
-): ServiceScreenView {
+export function getServiceScreenView(now: Date = new Date()): ServiceScreenView {
   const dataset = getDataset(now);
-  const specialist = account.role === "service_specialist";
-  const view = serviceView(dataset, now, specialist ? account.employeeId : undefined);
+  const view = serviceView(dataset, now);
   const clientById = new Map(dataset.clients.map((client) => [client.id, client]));
   const employeeById = new Map(dataset.employees.map((employee) => [employee.id, employee]));
 
@@ -58,14 +52,11 @@ export function getServiceScreenView(
   });
 
   return {
-    mode: specialist ? "specialist" : "company",
     meta: `Активные обращения и закрытые за 30 дней · ${formatNumber(rows.length)} записей · ${formatDateTime(now)}`,
-    note: specialist
-      ? "Показаны только назначенные вам обращения и ваши сроки SLA."
-      : "Открытые обращения, просрочки SLA и скорость первого ответа.",
+    note: "Открытые обращения, просрочки SLA и скорость первого ответа.",
     kpis: [
       {
-        label: specialist ? "Мои открытые" : "Открытые обращения",
+        label: "Открытые обращения",
         value: formatNumber(view.open),
         hint: "Открыто и в работе",
       },

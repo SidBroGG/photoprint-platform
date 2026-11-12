@@ -17,9 +17,7 @@ describe("issue board labels and scope", () => {
     ]);
     expect(visibleIssueAreas("sales")).toEqual(["sales"]);
     expect(visibleIssueAreas("production")).toEqual(["production"]);
-    expect(visibleIssueAreas("production_specialist")).toEqual(["production"]);
     expect(visibleIssueAreas("logistics_service")).toEqual(["logistics", "service"]);
-    expect(visibleIssueAreas("service_specialist")).toEqual(["service"]);
   });
 
   test("labels every category", () => {

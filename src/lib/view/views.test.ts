@@ -4,8 +4,6 @@ import { resetIssueStore } from "@/lib/board/store";
 import { createDataset } from "@/lib/data/generator";
 import { getDashboardView } from "./dashboard";
 import { getOrdersView, getOrderDetailView } from "./orders";
-import { getProductionScreenView } from "./production";
-import { getServiceScreenView } from "./service";
 import { getPersonnelScreenView } from "./personnel";
 import { getForecastScreenView } from "./forecast";
 import { getIssueBoardView } from "./issues";
@@ -65,17 +63,6 @@ describe("view models respect role restrictions", () => {
     expect(getOrderDetailView(findAccount("ceo")!, "PP-unknown", NOW)).toBeNull();
   });
 
-  test("scopes specialist pages to personal queues", () => {
-    const production = getProductionScreenView(findAccount("prod-spec")!, NOW);
-    expect(production.mode).toBe("specialist");
-    expect(production.stages).toHaveLength(0);
-    expect(production.kpis[0]?.label).toBe("В моей очереди");
-
-    const service = getServiceScreenView(findAccount("service-spec")!, NOW);
-    expect(service.mode).toBe("specialist");
-    expect(service.kpis[0]?.label).toBe("Мои открытые");
-  });
-
   test("scopes personnel departments", () => {
     const production = getPersonnelScreenView(findAccount("production")!, NOW);
     expect(production.scopeLabel).toBe("Производство");
@@ -101,9 +88,6 @@ describe("view models respect role restrictions", () => {
     const production = getIssueBoardView(findAccount("production")!, NOW);
     expect(production.issues.every((issue) => issue.area === "production")).toBe(true);
 
-    const specialist = getIssueBoardView(findAccount("prod-spec")!, NOW);
-    expect(specialist.issues.every((issue) => issue.area === "production")).toBe(true);
-
     const service = getIssueBoardView(findAccount("service")!, NOW);
     expect(service.areas.map((area) => area.area)).toEqual(["logistics", "service"]);
     expect(
@@ -111,11 +95,6 @@ describe("view models respect role restrictions", () => {
         (issue) => issue.area === "logistics" || issue.area === "service",
       ),
     ).toBe(true);
-
-    const serviceSpecialist = getIssueBoardView(findAccount("service-spec")!, NOW);
-    expect(serviceSpecialist.issues.every((issue) => issue.area === "service")).toBe(
-      true,
-    );
   });
 
   test("enables forecast sections by role", () => {

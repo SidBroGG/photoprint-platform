@@ -37,7 +37,7 @@ export function ProductionScreen({ data }: { data: ProductionScreenView }) {
           </SectionCard>
         )}
         <SectionCard
-          title={data.mode === "specialist" ? "Мои рискованные заказы" : "Просроченные и рискованные заказы"}
+          title="Просроченные и рискованные заказы"
           subtitle="Срок, этап, ответственный и причина отклонения."
         >
           <RiskOrders rows={data.risks} />

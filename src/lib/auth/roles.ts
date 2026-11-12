@@ -1,12 +1,6 @@
-import type { Department, ProductionStage } from "@/types/domain";
+import type { Department } from "@/types/domain";
 
-export type Role =
-  | "ceo"
-  | "sales"
-  | "production"
-  | "logistics_service"
-  | "production_specialist"
-  | "service_specialist";
+export type Role = "ceo" | "sales" | "production" | "logistics_service";
 
 export type PageKey =
   | "dashboard"
@@ -68,42 +62,17 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     home: "/dashboard",
     employeeId: "e14",
   },
-  {
-    id: "prod-spec",
-    name: "Алексей Петров",
-    role: "production_specialist",
-    roleLabel: "Специалист производства",
-    description: "Только своя очередь на печати и собственные просрочки.",
-    home: "/production",
-    employeeId: "e08",
-  },
-  {
-    id: "service-spec",
-    name: "Ольга Соколова",
-    role: "service_specialist",
-    roleLabel: "Специалист клиентского сервиса",
-    description: "Только назначенные обращения и свои сроки SLA.",
-    home: "/service",
-    employeeId: "e17",
-  },
 ];
 
 export const PAGE_ACCESS: Record<PageKey, Role[]> = {
   dashboard: ["ceo", "sales", "production", "logistics_service"],
-  issues: [
-    "ceo",
-    "sales",
-    "production",
-    "logistics_service",
-    "production_specialist",
-    "service_specialist",
-  ],
+  issues: ["ceo", "sales", "production", "logistics_service"],
   orders: ["ceo", "sales", "production", "logistics_service"],
   customers: ["ceo", "sales"],
   products: ["ceo", "sales"],
-  production: ["ceo", "production", "production_specialist"],
+  production: ["ceo", "production"],
   logistics: ["ceo", "logistics_service"],
-  service: ["ceo", "logistics_service", "service_specialist"],
+  service: ["ceo", "logistics_service"],
   personnel: ["ceo", "sales", "production", "logistics_service"],
   forecast: ["ceo", "sales", "production", "logistics_service"],
 };
@@ -113,8 +82,6 @@ export const ROLE_LABELS: Record<Role, string> = {
   sales: "Руководитель продаж и финансов",
   production: "Руководитель производства",
   logistics_service: "Руководитель логистики и клиентского сервиса",
-  production_specialist: "Специалист производства",
-  service_specialist: "Специалист клиентского сервиса",
 };
 
 export interface NavItem {
@@ -145,12 +112,8 @@ export function canAccess(role: Role, page: PageKey): boolean {
   return PAGE_ACCESS[page].includes(role);
 }
 
-export function homeRoute(role: Role): string {
-  return role === "production_specialist"
-    ? "/production"
-    : role === "service_specialist"
-      ? "/service"
-      : "/dashboard";
+export function homeRoute(): string {
+  return "/dashboard";
 }
 
 export function navItemsForRole(role: Role): NavItem[] {
@@ -189,11 +152,4 @@ export function personnelDepartments(role: Role): Department[] | undefined {
 
 export function canSeeOrderMoney(role: Role): boolean {
   return role === "ceo" || role === "sales";
-}
-
-export function productionStageForRole(
-  role: Role,
-  employeeStage?: ProductionStage,
-): ProductionStage | undefined {
-  return role === "production_specialist" ? employeeStage : undefined;
 }

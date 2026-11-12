@@ -16,10 +16,10 @@ const NOW = new Date("2026-11-11T09:30:00Z");
 
 const SALES: IssueActor = { id: "sales", name: "Игорь Волков", role: "sales" };
 const CEO: IssueActor = { id: "ceo", name: "Анна Смирнова", role: "ceo" };
-const PROD_SPEC: IssueActor = {
-  id: "prod-spec",
-  name: "Алексей Петров",
-  role: "production_specialist",
+const PRODUCTION: IssueActor = {
+  id: "production",
+  name: "Мария Кузнецова",
+  role: "production",
 };
 const SERVICE: IssueActor = {
   id: "service",
@@ -69,7 +69,7 @@ describe("issue store", () => {
       (item) => item.area === "production" && item.assigneeId === null,
     )!;
     expect(claimIssue(state, SALES, productionIssue.id).ok).toBe(false);
-    expect(claimIssue(state, PROD_SPEC, productionIssue.id).ok).toBe(true);
+    expect(claimIssue(state, PRODUCTION, productionIssue.id).ok).toBe(true);
   });
 
   test("creates a task in an allowed category and validates input", () => {

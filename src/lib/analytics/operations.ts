@@ -53,17 +53,10 @@ export interface ProductionView {
   riskOrders: Order[];
 }
 
-export function productionView(
-  orders: Order[],
-  now: Date,
-  scopeEmployeeId?: string,
-): ProductionView {
-  const scoped = scopeEmployeeId
-    ? orders.filter((order) => order.productionEmployeeId === scopeEmployeeId)
-    : orders;
-  const active = activeProductionOrders(scoped);
-  const overdue = overdueProductionOrders(scoped, now);
-  const ready = readyToShipOrders(scoped);
+export function productionView(orders: Order[], now: Date): ProductionView {
+  const active = activeProductionOrders(orders);
+  const overdue = overdueProductionOrders(orders, now);
+  const ready = readyToShipOrders(orders);
   const risk = active
     .filter(
       (order) =>
@@ -75,10 +68,8 @@ export function productionView(
     inProduction: active.length,
     overdue: overdue.length,
     ready: ready.length,
-    compliance: productionCompliance(scoped, periodStart(now, 30), now),
-    stages: scopeEmployeeId
-      ? []
-      : stageLoads(orders),
+    compliance: productionCompliance(orders, periodStart(now, 30), now),
+    stages: stageLoads(orders),
     riskOrders: risk,
   };
 }
@@ -140,17 +131,10 @@ export interface ServiceView {
   rows: SupportTicket[];
 }
 
-export function serviceView(
-  dataset: Dataset,
-  now: Date,
-  scopeEmployeeId?: string,
-): ServiceView {
-  const scopedTickets = scopeEmployeeId
-    ? dataset.tickets.filter((ticket) => ticket.assigneeId === scopeEmployeeId)
-    : dataset.tickets;
-  const stats = serviceStats(scopedTickets, now);
+export function serviceView(dataset: Dataset, now: Date): ServiceView {
+  const stats = serviceStats(dataset.tickets, now);
   const closedFrom = periodStart(now, 30);
-  const rows = scopedTickets
+  const rows = dataset.tickets
     .filter((ticket) => {
       if (ticket.status !== "closed") return true;
       return (

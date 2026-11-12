@@ -32,18 +32,6 @@ describe("production operations", () => {
     );
     expect(view.compliance).toBeGreaterThan(0.7);
   });
-
-  test("scopes a specialist to their own queue without company aggregates", () => {
-    const view = productionView(dataset.orders, NOW, "e08");
-    expect(view.stages).toHaveLength(0);
-    const assigned = dataset.orders.filter(
-      (order) =>
-        order.productionEmployeeId === "e08" &&
-        ["prepress", "print", "binding"].includes(order.stage),
-    );
-    expect(view.inProduction).toBe(assigned.length);
-    expect(view.inProduction).toBeGreaterThan(0);
-  });
 });
 
 describe("logistics operations", () => {
@@ -73,13 +61,6 @@ describe("service operations", () => {
     expect(view.rows.slice(0, overdue.length).every((ticket) => ticket.status !== "closed")).toBe(
       true,
     );
-  });
-
-  test("scopes a service specialist to assigned tickets", () => {
-    const view = serviceView(dataset, NOW, "e17");
-    expect(view.rows.length).toBeGreaterThan(0);
-    expect(view.rows.every((ticket) => ticket.assigneeId === "e17")).toBe(true);
-    expect(view.overdue).toBeGreaterThan(0);
   });
 });
 
