@@ -17,10 +17,10 @@ export function MarketingFunnel({ stages }: { stages: MarketingFunnelStageVM[] }
           key={stage.key}
           variant="outlined"
           sx={{
-            p: 1.5,
+            p: 1.75,
             borderColor: stage.isBottleneck ? "#E8B4B4" : "#E3E6EB",
             backgroundColor: stage.isBottleneck ? "#FFF8F7" : "#FFFFFF",
-            borderRadius: 0.5,
+            borderRadius: 1,
           }}
         >
           <Box

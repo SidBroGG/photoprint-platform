@@ -5,13 +5,16 @@ import { BarChart } from "@mui/x-charts/BarChart";
 export function SeasonalityChart({
   labels,
   orders,
+  height = 340,
 }: {
   labels: string[];
   orders: number[];
+  height?: number;
 }) {
   return (
     <BarChart
-      height={300}
+      height={height}
+      sx={{ width: "100%" }}
       series={[{ data: orders, label: "Заказы", color: "#17181C" }]}
       xAxis={[
         {

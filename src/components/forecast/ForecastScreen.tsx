@@ -65,6 +65,7 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
                 labels={data.daily.labels}
                 values={data.daily.orders}
                 label="Заказы"
+                height={340}
               />
             </SectionCard>
             <SectionCard
@@ -77,6 +78,7 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
                 label="Выручка"
                 kind="money"
                 color="#E6B000"
+                height={340}
               />
             </SectionCard>
           </Box>
@@ -92,6 +94,7 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
                 labels={data.daily.labels}
                 orders={data.daily.orders}
                 capacities={data.capacities}
+                height={360}
               />
             </SectionCard>
             <SectionCard
@@ -108,7 +111,11 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
             title="Объём отправлений, 21 день"
             subtitle="Прогноз заказов с доставкой по дням."
           >
-            <ShipmentsChart labels={data.daily.labels} values={data.daily.shipments} />
+            <ShipmentsChart
+              labels={data.daily.labels}
+              values={data.daily.shipments}
+              height={340}
+            />
           </SectionCard>
         )}
 
@@ -125,6 +132,7 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
                 action: risk.action,
                 horizon: risk.horizon,
                 severity: risk.severity,
+                area: risk.area,
               }))}
               showLink={false}
             />
@@ -137,13 +145,22 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
           title="Долгосрочный тренд"
           subtitle="12 месяцев истории и 3 месяца прогноза. Жёлтая линия — прогноз."
         >
-          <Box className="grid grid-cols-1 xl:grid-cols-2" sx={{ gap: 3 }}>
+          <Box
+            className={
+              data.showSales
+                ? "grid grid-cols-1 xl:grid-cols-2"
+                : "grid grid-cols-1"
+            }
+            sx={{ gap: 3 }}
+          >
             <Box>
               <DailyForecastTitle text="Заказы по месяцам" />
               <LongTermChart
                 labels={data.longTerm.labels}
                 history={data.longTerm.ordersHistory}
                 forecast={data.longTerm.ordersForecast}
+                height={340}
+                hideLegend
               />
             </Box>
             {data.showSales && (
@@ -154,6 +171,8 @@ export function ForecastScreen({ data }: { data: ForecastScreenView }) {
                   history={data.longTerm.revenueHistory}
                   forecast={data.longTerm.revenueForecast}
                   kind="money"
+                  height={340}
+                  hideLegend
                 />
               </Box>
             )}

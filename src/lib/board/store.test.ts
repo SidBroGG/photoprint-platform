@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "bun:test";
 import {
+  assignIssue,
   claimIssue,
   createIssue,
   createSeedIssues,
@@ -14,22 +15,30 @@ import type { IssueCriticality } from "@/types/board";
 
 const NOW = new Date("2026-11-11T09:30:00Z");
 
-const SALES: IssueActor = { id: "sales", name: "Игорь Волков", role: "sales" };
+const SALES: IssueActor = {
+  id: "sales",
+  name: "Игорь Волков",
+  role: "sales",
+  employeeId: "e01",
+};
 const CEO: IssueActor = { id: "ceo", name: "Анна Смирнова", role: "ceo" };
 const PRODUCTION: IssueActor = {
   id: "production",
   name: "Мария Кузнецова",
   role: "production",
+  employeeId: "e05",
 };
 const SERVICE: IssueActor = {
   id: "service",
   name: "Дмитрий Орлов",
   role: "logistics_service",
+  employeeId: "e14",
 };
 const MARKETING: IssueActor = {
   id: "marketing",
   name: "Екатерина Соколова",
   role: "marketing",
+  employeeId: "e19",
 };
 
 describe("issue store", () => {
@@ -72,6 +81,95 @@ describe("issue store", () => {
     expect(releaseIssue(state, SALES, issue.id).ok).toBe(true);
     expect(issue.assigneeId).toBeNull();
     expect(releaseIssue(state, SALES, issue.id).ok).toBe(false);
+  });
+
+  test("treats tasks assigned to the linked employee as mine", () => {
+    const state = getIssueStore(NOW);
+    const issue = state.issues.find(
+      (item) => item.area === "sales" && item.assigneeId === null,
+    )!;
+    issue.assigneeId = "e01";
+    issue.assigneeName = "Игорь Волков";
+
+    expect(claimIssue(state, SALES, issue.id).ok).toBe(true);
+    expect(issue.assigneeId).toBe("e01");
+    expect(releaseIssue(state, SALES, issue.id).ok).toBe(true);
+    expect(issue.assigneeId).toBeNull();
+  });
+
+  test("assigns tasks only to subordinates of the manager's direction", () => {
+    const state = getIssueStore(NOW);
+    const salesIssue = state.issues.find(
+      (item) => item.area === "sales" && item.assigneeId === null,
+    )!;
+    const productionIssue = state.issues.find(
+      (item) => item.area === "production" && item.assigneeId === null,
+    )!;
+    const marketingIssue = state.issues.find(
+      (item) => item.area === "marketing" && item.assigneeId === null,
+    )!;
+    const serviceIssue = state.issues.find(
+      (item) => item.area === "service" && item.assigneeId === null,
+    )!;
+
+    expect(
+      assignIssue(state, SALES, salesIssue.id, {
+        id: "e02",
+        name: "Светлана Белова",
+        department: "sales",
+      }).ok,
+    ).toBe(true);
+    expect(salesIssue.assigneeId).toBe("e02");
+    expect(salesIssue.assigneeName).toBe("Светлана Белова");
+    expect(
+      assignIssue(state, SALES, salesIssue.id, {
+        id: "e06",
+        name: "Сергей Крылов",
+        department: "production",
+      }).ok,
+    ).toBe(false);
+    expect(
+      assignIssue(state, SALES, salesIssue.id, {
+        id: "e01",
+        name: "Игорь Волков",
+        department: "sales",
+      }).ok,
+    ).toBe(false);
+    expect(
+      assignIssue(state, PRODUCTION, salesIssue.id, {
+        id: "e06",
+        name: "Сергей Крылов",
+        department: "production",
+      }).ok,
+    ).toBe(false);
+    expect(
+      assignIssue(state, PRODUCTION, productionIssue.id, {
+        id: "e06",
+        name: "Сергей Крылов",
+        department: "production",
+      }).ok,
+    ).toBe(true);
+    expect(
+      assignIssue(state, MARKETING, marketingIssue.id, {
+        id: "e20",
+        name: "Алексей Романов",
+        department: "marketing",
+      }).ok,
+    ).toBe(true);
+    expect(
+      assignIssue(state, MARKETING, marketingIssue.id, {
+        id: "e19",
+        name: "Екатерина Соколова",
+        department: "marketing",
+      }).ok,
+    ).toBe(false);
+    expect(
+      assignIssue(state, CEO, serviceIssue.id, {
+        id: "e15",
+        name: "Оксана Волкова",
+        department: "logistics",
+      }).ok,
+    ).toBe(true);
   });
 
   test("does not let a role claim another category", () => {

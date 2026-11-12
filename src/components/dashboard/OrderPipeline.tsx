@@ -11,14 +11,14 @@ export function OrderPipeline({ stages }: { stages: PipelineVM[] }) {
       sx={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-        gap: 1.25,
+        gap: 1.5,
       }}
     >
       {stages.map((stage) => (
         <Paper
           key={stage.key}
           variant="outlined"
-          sx={{ px: 1.5, py: 1.4, borderColor: "#E3E6EB", borderRadius: 0.5 }}
+          sx={{ p: 1.5, borderColor: "#E3E6EB", borderRadius: 1 }}
         >
           <Typography
             variant="caption"

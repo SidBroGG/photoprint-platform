@@ -26,7 +26,7 @@ export function KpiCard({
 }) {
   return (
     <Card sx={{ height: "100%" }}>
-      <Box sx={{ px: 2.25, py: 2 }}>
+      <Box sx={{ px: 2.5, py: 2.25 }}>
         <Typography
           variant="body2"
           color="text.secondary"

@@ -18,7 +18,7 @@ export function StageLoad({ stages }: { stages: StageLoadVM[] }) {
             backgroundColor: stage.isBottleneck ? "#FFFBFB" : "#FFFFFF",
           }}
         >
-          <Box sx={{ p: 2.25 }}>
+          <Box sx={{ p: 2.5 }}>
             <Box
               sx={{
                 display: "flex",

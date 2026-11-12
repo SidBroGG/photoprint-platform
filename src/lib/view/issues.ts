@@ -1,4 +1,5 @@
 import type { DemoAccount } from "@/lib/auth/roles";
+import { personnelDepartments } from "@/lib/auth/roles";
 import {
   ISSUE_AREA_LABELS,
   ISSUE_CRITICALITY_LABELS,
@@ -7,9 +8,16 @@ import {
   visibleIssueAreas,
 } from "@/lib/board/labels";
 import { getIssueStore } from "@/lib/board/store";
+import { getDataset } from "@/lib/data/store";
+import { DEPARTMENT_LABELS } from "@/lib/labels";
 import { formatDateTime, formatNumber } from "@/lib/format";
 import type { KpiVM } from "@/lib/view/dashboard";
-import type { IssueArea, IssueCriticality, IssueStatus } from "@/types/board";
+import type {
+  Issue,
+  IssueArea,
+  IssueCriticality,
+  IssueStatus,
+} from "@/types/board";
 import type { Tone } from "@/lib/labels";
 
 export interface IssueCardVM {
@@ -22,12 +30,20 @@ export interface IssueCardVM {
   criticality: IssueCriticality;
   criticalityLabel: string;
   criticalityTone: Tone;
+  assigneeId: string | null;
   assigneeName: string | null;
   isMine: boolean;
   canClaim: boolean;
   canRelease: boolean;
   createdByName: string;
   updatedAtLabel: string;
+}
+
+export interface IssueAssigneeVM {
+  id: string;
+  name: string;
+  role: string;
+  departmentLabel: string;
 }
 
 export interface IssueAreaVM {
@@ -42,21 +58,22 @@ export interface IssueBoardView {
   issues: IssueCardVM[];
   areas: IssueAreaVM[];
   createAreas: IssueAreaVM[];
+  assignees: IssueAssigneeVM[];
   defaultArea: IssueArea;
   showAreaChips: boolean;
 }
 
 const ROLE_NOTES: Record<string, string> = {
   ceo:
-    "Все процессы компании, разделённые по категориям. Фильтруйте задачи по направлению, закрепляйте их за собой и переводите по статусам.",
+    "Все процессы компании, разделённые по категориям. Закрепляйте задачи за собой, назначайте сотрудникам и переводите по статусам.",
   sales:
-    "Проблемы и процессы направления продаж и финансов. Закрепляйте задачи за собой и меняйте статус прямо на доске.",
+    "Проблемы и процессы направления продаж и финансов. Назначайте задачи сотрудникам направления или закрепляйте за собой.",
   production:
-    "Проблемы и процессы производства. Перетаскивайте карточки между колонками или меняйте статус в карточке.",
+    "Проблемы и процессы производства. Назначайте задачи подчинённым, перетаскивайте карточки между колонками или меняйте статус.",
   logistics_service:
-    "Процессы логистики и клиентского сервиса. Фильтруйте категории, закрепляйте задачи и контролируйте критичность.",
+    "Процессы логистики и клиентского сервиса. Назначайте задачи сотрудникам направления и контролируйте критичность.",
   marketing:
-    "Задачи маркетинга: кампании, каналы, конверсия и бюджет. Закрепляйте задачи за собой и меняйте статус прямо на доске.",
+    "Задачи маркетинга: кампании, каналы, конверсия и бюджет. Назначайте задачи команде или закрепляйте за собой.",
 };
 
 export function getIssueBoardView(
@@ -74,6 +91,13 @@ export function getIssueBoardView(
       return b.updatedAt.getTime() - a.updatedAt.getTime();
     });
 
+  function isAssignedToMe(issue: Issue): boolean {
+    return (
+      issue.assigneeId === account.id ||
+      (account.employeeId !== undefined && issue.assigneeId === account.employeeId)
+    );
+  }
+
   const issues: IssueCardVM[] = sorted.map((issue) => ({
     id: issue.id,
     title: issue.title,
@@ -84,10 +108,11 @@ export function getIssueBoardView(
     criticality: issue.criticality,
     criticalityLabel: ISSUE_CRITICALITY_LABELS[issue.criticality],
     criticalityTone: issueCriticalityTone(issue.criticality),
+    assigneeId: issue.assigneeId,
     assigneeName: issue.assigneeName,
-    isMine: issue.assigneeId === account.id,
+    isMine: isAssignedToMe(issue),
     canClaim: issue.assigneeId === null,
-    canRelease: issue.assigneeId === account.id,
+    canRelease: isAssignedToMe(issue),
     createdByName: issue.createdByName,
     updatedAtLabel: formatDateTime(issue.updatedAt),
   }));
@@ -95,7 +120,7 @@ export function getIssueBoardView(
   const openIssues = scoped.filter((issue) => issue.status !== "done");
   const inProgress = openIssues.filter((issue) => issue.status === "in_progress");
   const critical = openIssues.filter((issue) => issue.criticality === "critical");
-  const mine = openIssues.filter((issue) => issue.assigneeId === account.id);
+  const mine = openIssues.filter(isAssignedToMe);
 
   const stats: KpiVM[] = [
     {
@@ -127,6 +152,21 @@ export function getIssueBoardView(
     label: ISSUE_AREA_LABELS[area],
   }));
 
+  const departments = personnelDepartments(account.role);
+  const assignees: IssueAssigneeVM[] = getDataset(now)
+    .employees.filter(
+      (employee) =>
+        (!departments || departments.includes(employee.department)) &&
+        employee.id !== account.employeeId,
+    )
+    .sort((a, b) => a.name.localeCompare(b.name, "ru"))
+    .map((employee) => ({
+      id: employee.id,
+      name: employee.name,
+      role: employee.role,
+      departmentLabel: DEPARTMENT_LABELS[employee.department],
+    }));
+
   return {
     meta: `Данные на ${formatDateTime(now)} · изменения сохраняются в памяти сервера`,
     note:
@@ -136,6 +176,7 @@ export function getIssueBoardView(
     issues,
     areas,
     createAreas: areas,
+    assignees,
     defaultArea: allowedAreas[0] ?? "sales",
     showAreaChips: areas.length > 1,
   };

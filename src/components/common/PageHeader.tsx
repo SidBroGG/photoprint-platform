@@ -22,7 +22,7 @@ export function PageHeader({
         justifyContent: "space-between",
         flexDirection: { xs: "column", md: "row" },
         gap: 1.5,
-        mb: 2.5,
+        mb: 3,
       }}
     >
       <Box>

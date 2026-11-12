@@ -12,6 +12,7 @@ import {
 } from "@/lib/format";
 import { monthKeyLabel } from "@/lib/dates";
 import type { KpiVM } from "@/lib/view/dashboard";
+import type { IssueArea } from "@/types/board";
 
 export interface ForecastStageRiskVM {
   stage: string;
@@ -32,6 +33,7 @@ export interface ForecastRiskVM {
   severity: "critical" | "warning";
   severityLabel: string;
   domainLabel: string;
+  area: IssueArea;
 }
 
 export interface ForecastScreenView {
@@ -249,6 +251,7 @@ export function getForecastScreenView(
       severity: risk.severity,
       severityLabel: risk.severity === "critical" ? "Критично" : "Предупреждение",
       domainLabel: risk.domain === "production" ? "Производство" : "Клиентский сервис",
+      area: risk.domain === "production" ? "production" : "service",
     }));
 
   return {

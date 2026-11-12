@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import type { DemoAccount } from "@/lib/auth/roles";
 import { requireSession } from "@/lib/auth/session";
+import { getDataset } from "@/lib/data/store";
 import {
+  assignIssue,
   claimIssue,
   createIssue,
   getIssueStore,
@@ -20,7 +22,12 @@ import type {
 } from "@/types/board";
 
 function actorOf(account: DemoAccount): IssueActor {
-  return { id: account.id, name: account.name, role: account.role };
+  return {
+    id: account.id,
+    name: account.name,
+    role: account.role,
+    employeeId: account.employeeId,
+  };
 }
 
 export async function createIssueAction(
@@ -28,7 +35,12 @@ export async function createIssueAction(
 ): Promise<IssueActionResult> {
   const account = await requireSession();
   const result = createIssue(getIssueStore(), actorOf(account), input);
-  if (result.ok) revalidatePath("/issues");
+  if (result.ok) {
+    revalidatePath("/issues");
+    revalidatePath("/dashboard");
+    revalidatePath("/forecast");
+    revalidatePath("/metrics");
+  }
   return result;
 }
 
@@ -63,5 +75,26 @@ export async function releaseIssueAction(issueId: string): Promise<IssueActionRe
   const account = await requireSession();
   const result = releaseIssue(getIssueStore(), actorOf(account), issueId);
   if (result.ok) revalidatePath("/issues");
+  return result;
+}
+
+export async function assignIssueAction(
+  issueId: string,
+  employeeId: string,
+): Promise<IssueActionResult> {
+  const account = await requireSession();
+  const employee = getDataset().employees.find((item) => item.id === employeeId);
+  if (!employee) {
+    return { ok: false, error: "Сотрудник не найден." };
+  }
+  const result = assignIssue(getIssueStore(), actorOf(account), issueId, {
+    id: employee.id,
+    name: employee.name,
+    department: employee.department,
+  });
+  if (result.ok) {
+    revalidatePath("/issues");
+    revalidatePath("/dashboard");
+  }
   return result;
 }

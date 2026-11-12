@@ -23,10 +23,10 @@ export function MarketingBottleneckCard({
     <Paper
       variant="outlined"
       sx={{
-        p: 2,
+        p: 2.5,
         borderColor: "#E8B4B4",
         backgroundColor: "#FFF8F7",
-        borderRadius: 0.5,
+        borderRadius: 1,
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 1 }}>

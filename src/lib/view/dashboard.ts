@@ -36,6 +36,7 @@ import {
 } from "@/lib/format";
 import type { Tone } from "@/lib/labels";
 import { STAGE_CAPACITY } from "@/types/domain";
+import type { IssueArea } from "@/types/board";
 import { getMarketingDashboardView } from "@/lib/view/marketing";
 
 export interface KpiVM {
@@ -59,6 +60,7 @@ export interface ForecastRiskVM {
   action: string;
   horizon: string;
   severity: "critical" | "warning";
+  area: IssueArea;
 }
 
 export type DashboardChartVM =
@@ -175,6 +177,7 @@ function getMarketingOverviewView(now: Date): DashboardView {
       action: marketing.bottleneck.recommendation,
       horizon: "30 дней",
       severity: "critical",
+      area: "marketing",
     });
   }
   for (const problem of marketing.channelProblems.slice(0, 1)) {
@@ -185,6 +188,7 @@ function getMarketingOverviewView(now: Date): DashboardView {
       action: problem.action,
       horizon: "30 дней",
       severity: problem.severity,
+      area: "marketing",
     });
   }
 
@@ -418,6 +422,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
       action: risk.action,
       horizon: risk.horizon,
       severity: risk.severity,
+      area: risk.domain === "production" ? "production" : "service",
     }));
 
   const dailyLabels = forecast.daily.map((point) => formatDayMonth(point.date));
@@ -465,7 +470,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
     chart: "stage",
     key: "forecast_capacity",
     title: "Спрос vs мощности",
-    subtitle: "21 день · заказы в день и сменная мощность этапов",
+    subtitle: "21 день · жёлтый — спрос, серый — мощности, красный — сборка",
     labels: dailyLabels,
     orders: forecast.daily.map((point) => point.orders),
     capacities: STAGE_CAPACITY,
@@ -482,7 +487,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
     chart: "longTerm",
     key: "forecast_long_orders",
     title: "Долгосрочный прогноз заказов",
-    subtitle: "12 месяцев истории + 3 месяца прогноза",
+    subtitle: "12 месяцев истории + 3 месяца прогноза · жёлтая линия — прогноз",
     labels: longTermLabels,
     history: ordersHistory,
     forecast: ordersForecast,
@@ -491,7 +496,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
     chart: "longTerm",
     key: "forecast_long_revenue",
     title: "Долгосрочный прогноз выручки",
-    subtitle: "12 месяцев истории + 3 месяца прогноза",
+    subtitle: "12 месяцев истории + 3 месяца прогноза · жёлтая линия — прогноз",
     labels: longTermLabels,
     history: revenueHistory,
     forecast: revenueForecast,

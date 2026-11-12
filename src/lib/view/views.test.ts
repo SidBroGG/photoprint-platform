@@ -108,6 +108,46 @@ describe("view models respect role restrictions", () => {
     expect(marketing.issues.every((issue) => issue.area === "marketing")).toBe(true);
   });
 
+  test("lists only subordinate employees as assignees", () => {
+    const sales = getIssueBoardView(findAccount("sales")!, NOW);
+    expect(sales.assignees.map((assignee) => assignee.id).sort()).toEqual([
+      "e02",
+      "e03",
+      "e04",
+    ]);
+    expect(sales.assignees.some((assignee) => assignee.id === "e01")).toBe(false);
+
+    const production = getIssueBoardView(findAccount("production")!, NOW);
+    expect(production.assignees.map((assignee) => assignee.id).sort()).toEqual([
+      "e06",
+      "e07",
+      "e08",
+      "e09",
+      "e10",
+      "e11",
+      "e12",
+      "e13",
+    ]);
+
+    const service = getIssueBoardView(findAccount("service")!, NOW);
+    expect(service.assignees.map((assignee) => assignee.id).sort()).toEqual([
+      "e15",
+      "e16",
+      "e17",
+      "e18",
+    ]);
+
+    const marketing = getIssueBoardView(findAccount("marketing")!, NOW);
+    expect(marketing.assignees.map((assignee) => assignee.id).sort()).toEqual([
+      "e20",
+      "e21",
+    ]);
+
+    const ceo = getIssueBoardView(findAccount("ceo")!, NOW);
+    expect(ceo.assignees).toHaveLength(21);
+    expect(ceo.assignees.some((assignee) => assignee.id === "e01")).toBe(true);
+  });
+
   test("enables forecast sections by role", () => {
     const ceo = getForecastScreenView(findAccount("ceo")!, NOW);
     expect(ceo.showSales).toBe(true);
@@ -115,19 +155,27 @@ describe("view models respect role restrictions", () => {
     expect(ceo.showLogistics).toBe(true);
     expect(ceo.daily.orders).toHaveLength(21);
     expect(ceo.longTerm.labels).toHaveLength(15);
+    expect(
+      ceo.risks.every(
+        (risk) => risk.area === "production" || risk.area === "service",
+      ),
+    ).toBe(true);
 
     const sales = getForecastScreenView(findAccount("sales")!, NOW);
     expect(sales.showSales).toBe(true);
     expect(sales.showProduction).toBe(false);
     expect(sales.showLogistics).toBe(false);
+    expect(sales.risks).toHaveLength(0);
 
     const production = getForecastScreenView(findAccount("production")!, NOW);
     expect(production.showProduction).toBe(true);
     expect(production.showSales).toBe(false);
+    expect(production.risks.every((risk) => risk.area === "production")).toBe(true);
 
     const service = getForecastScreenView(findAccount("service")!, NOW);
     expect(service.showLogistics).toBe(true);
     expect(service.showProduction).toBe(false);
+    expect(service.risks.every((risk) => risk.area === "service")).toBe(true);
   });
 
   test("builds the marketing funnel with a clear bottleneck", () => {
@@ -178,6 +226,11 @@ describe("view models respect role restrictions", () => {
     expect(ceo.problems.length).toBeGreaterThan(0);
     expect(ceo.problemsTotal).toBeGreaterThanOrEqual(ceo.problems.length);
     expect(ceo.problemsHref).toBe("/issues");
+    expect(
+      ceo.forecastRisks.every(
+        (risk) => risk.area === "production" || risk.area === "service",
+      ),
+    ).toBe(true);
 
     const sales = getDashboardView(findAccount("sales")!, NOW);
     expect(sales.forecastCharts.map((chart) => chart.chart)).toEqual([
@@ -224,5 +277,8 @@ describe("view models respect role restrictions", () => {
     ).toBe(true);
     expect(marketing.problemsHref).toBe("/issues");
     expect(marketing.showForecastLink).toBe(false);
+    expect(
+      marketing.forecastRisks.every((risk) => risk.area === "marketing"),
+    ).toBe(true);
   });
 });

@@ -6,14 +6,17 @@ export function DailyMarketingChart({
   labels,
   visits,
   payments,
+  height = 340,
 }: {
   labels: string[];
   visits: number[];
   payments: number[];
+  height?: number;
 }) {
   return (
     <LineChart
-      height={300}
+      height={height}
+      sx={{ width: "100%" }}
       series={[
         {
           data: visits,

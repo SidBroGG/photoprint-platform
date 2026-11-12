@@ -10,25 +10,34 @@ export function SectionCard({
   title,
   subtitle,
   action,
+  fill = false,
   children,
 }: {
   title?: string;
   subtitle?: string;
   action?: ReactNode;
+  fill?: boolean;
   children: ReactNode;
 }) {
   return (
-    <Card>
+    <Card
+      sx={
+        fill
+          ? { height: "100%", display: "flex", flexDirection: "column" }
+          : undefined
+      }
+    >
       {(title || action) && (
         <Box
           sx={{
             px: 2.5,
-            pt: 2,
+            pt: 2.25,
             pb: title && subtitle ? 1.25 : 1.5,
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "space-between",
             gap: 2,
+            flexShrink: 0,
           }}
         >
           <Box>
@@ -46,7 +55,16 @@ export function SectionCard({
           {action && <Box sx={{ flexShrink: 0 }}>{action}</Box>}
         </Box>
       )}
-      <CardContent sx={{ px: 2.5, py: title ? 1.5 : 2.5, "&:last-child": { pb: 2.5 } }}>
+      <CardContent
+        sx={{
+          px: 2.5,
+          pt: title ? 1.5 : 2.5,
+          pb: 2.5,
+          ...(fill
+            ? { flexGrow: 1, display: "flex", flexDirection: "column" }
+            : {}),
+        }}
+      >
         {children}
       </CardContent>
     </Card>

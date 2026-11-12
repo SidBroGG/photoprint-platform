@@ -23,7 +23,7 @@ export function MarketingDashboardScreen({
     <>
       <PageHeader description={data.note} meta={data.meta} />
       <Stack spacing={3}>
-        <Box className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4" sx={{ gap: 2 }}>
+        <Box className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" sx={{ gap: 2 }}>
           {data.kpis.map((kpi) => (
             <KpiCard
               key={kpi.label}

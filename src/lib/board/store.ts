@@ -1,5 +1,6 @@
-import { DEMO_ACCOUNTS, type Role } from "@/lib/auth/roles";
+import { DEMO_ACCOUNTS, personnelDepartments, type Role } from "@/lib/auth/roles";
 import { addHours } from "@/lib/dates";
+import type { Department } from "@/types/domain";
 import {
   ISSUE_CRITICALITIES,
   ISSUE_STATUSES,
@@ -18,6 +19,13 @@ export interface IssueActor {
   id: string;
   name: string;
   role: Role;
+  employeeId?: string;
+}
+
+export interface IssueAssignee {
+  id: string;
+  name: string;
+  department: Department;
 }
 
 export interface IssueStoreState {
@@ -461,6 +469,13 @@ export function setIssueStatus(
   return { ok: true };
 }
 
+function isAssignedToActor(issue: Issue, actor: IssueActor): boolean {
+  return (
+    issue.assigneeId === actor.id ||
+    (actor.employeeId !== undefined && issue.assigneeId === actor.employeeId)
+  );
+}
+
 export function claimIssue(
   state: IssueStoreState,
   actor: IssueActor,
@@ -469,9 +484,10 @@ export function claimIssue(
   const issue = findIssue(state, issueId);
   if (!issue) return fail("Задача не найдена.");
   if (!isVisible(state, actor, issue)) return fail("Нет доступа к этой задаче.");
-  if (issue.assigneeId !== null && issue.assigneeId !== actor.id) {
+  if (issue.assigneeId !== null && !isAssignedToActor(issue, actor)) {
     return fail("Задача уже закреплена за другим сотрудником.");
   }
+  if (isAssignedToActor(issue, actor)) return { ok: true };
   issue.assigneeId = actor.id;
   issue.assigneeName = actor.name;
   issue.updatedAt = new Date();
@@ -486,11 +502,33 @@ export function releaseIssue(
   const issue = findIssue(state, issueId);
   if (!issue) return fail("Задача не найдена.");
   if (!isVisible(state, actor, issue)) return fail("Нет доступа к этой задаче.");
-  if (issue.assigneeId !== actor.id) {
+  if (!isAssignedToActor(issue, actor)) {
     return fail("Снять задачу может только сотрудник, за которым она закреплена.");
   }
   issue.assigneeId = null;
   issue.assigneeName = null;
+  issue.updatedAt = new Date();
+  return { ok: true };
+}
+
+export function assignIssue(
+  state: IssueStoreState,
+  actor: IssueActor,
+  issueId: string,
+  assignee: IssueAssignee,
+): IssueMutationResult {
+  const issue = findIssue(state, issueId);
+  if (!issue) return fail("Задача не найдена.");
+  if (!isVisible(state, actor, issue)) return fail("Нет доступа к этой задаче.");
+  if (actor.employeeId !== undefined && assignee.id === actor.employeeId) {
+    return fail("Назначьте задачу подчинённому или закрепите её за собой.");
+  }
+  const departments = personnelDepartments(actor.role);
+  if (departments && !departments.includes(assignee.department)) {
+    return fail("Можно назначать задачи только сотрудникам своего направления.");
+  }
+  issue.assigneeId = assignee.id;
+  issue.assigneeName = assignee.name;
   issue.updatedAt = new Date();
   return { ok: true };
 }

@@ -79,7 +79,7 @@ export const theme = createTheme({
         root: {
           border: "1px solid #E3E6EB",
           boxShadow: "none",
-          borderRadius: 6,
+          borderRadius: 8,
         },
       },
     },

@@ -13,7 +13,7 @@ export function MarketingForecastCharts({
   return (
     <Box className="grid grid-cols-1 lg:grid-cols-3" sx={{ gap: 3 }}>
       <Box>
-        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
           Визиты
         </Typography>
         <DailyForecastChart
@@ -21,10 +21,11 @@ export function MarketingForecastCharts({
           values={forecast.visits}
           label="Визиты"
           color="#17181C"
+          height={320}
         />
       </Box>
       <Box>
-        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
           Оплаты
         </Typography>
         <DailyForecastChart
@@ -32,10 +33,11 @@ export function MarketingForecastCharts({
           values={forecast.payments}
           label="Оплаты"
           color="#FFC400"
+          height={320}
         />
       </Box>
       <Box>
-        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1.25 }}>
           Выручка
         </Typography>
         <DailyForecastChart
@@ -44,6 +46,7 @@ export function MarketingForecastCharts({
           label="Выручка"
           kind="money"
           color="#1E8E3E"
+          height={320}
         />
       </Box>
     </Box>

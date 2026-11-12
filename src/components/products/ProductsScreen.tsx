@@ -32,7 +32,11 @@ export function ProductsScreen({ data }: { data: ProductsView }) {
           title="Сезонность"
           subtitle={`Заказы по месяцам за 12 месяцев. Пиковый месяц: ${data.chart.peakLabel}. Текущий месяц показан частично.`}
         >
-          <SeasonalityChart labels={data.chart.labels} orders={data.chart.orders} />
+          <SeasonalityChart
+            labels={data.chart.labels}
+            orders={data.chart.orders}
+            height={340}
+          />
         </SectionCard>
         <SectionCard
           title="Продукты"

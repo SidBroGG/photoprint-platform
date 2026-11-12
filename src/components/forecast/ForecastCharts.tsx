@@ -24,21 +24,29 @@ export function DailyForecastChart({
   label,
   kind = "count",
   color = "#17181C",
+  height = 320,
+  hideLegend = true,
+  fill = false,
 }: {
   labels: string[];
   values: number[];
   label: string;
   kind?: "count" | "money";
   color?: string;
+  height?: number;
+  hideLegend?: boolean;
+  fill?: boolean;
 }) {
   return (
     <LineChart
-      height={300}
+      height={fill ? undefined : height}
+      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
       series={[{ data: values, label, color, showMark: false, curve: "linear" }]}
       xAxis={[{ scaleType: "point", data: labels, tickLabelStyle: { fontSize: 10 } }]}
       yAxis={[{ valueFormatter: axisFormatter(kind) }]}
       grid={{ horizontal: true }}
       margin={{ left: 66, right: 16, top: 24, bottom: 48 }}
+      hideLegend={hideLegend}
     />
   );
 }
@@ -47,14 +55,21 @@ export function StageDemandChart({
   labels,
   orders,
   capacities,
+  height = 340,
+  hideLegend = false,
+  fill = false,
 }: {
   labels: string[];
   orders: number[];
   capacities: { prepress: number; print: number; binding: number };
+  height?: number;
+  hideLegend?: boolean;
+  fill?: boolean;
 }) {
   return (
     <LineChart
-      height={320}
+      height={fill ? undefined : height}
+      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
       series={[
         {
           data: orders,
@@ -85,6 +100,7 @@ export function StageDemandChart({
       xAxis={[{ scaleType: "point", data: labels, tickLabelStyle: { fontSize: 10 } }]}
       grid={{ horizontal: true }}
       margin={{ left: 44, right: 16, top: 24, bottom: 64 }}
+      hideLegend={hideLegend}
     />
   );
 }
@@ -92,13 +108,18 @@ export function StageDemandChart({
 export function ShipmentsChart({
   labels,
   values,
+  height = 320,
+  fill = false,
 }: {
   labels: string[];
   values: number[];
+  height?: number;
+  fill?: boolean;
 }) {
   return (
     <BarChart
-      height={300}
+      height={fill ? undefined : height}
+      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
       series={[{ data: values, label: "Отправления", color: "#FFC400" }]}
       xAxis={[{ scaleType: "band", data: labels, tickLabelStyle: { fontSize: 10 } }]}
       grid={{ horizontal: true }}
@@ -113,15 +134,22 @@ export function LongTermChart({
   history,
   forecast,
   kind = "count",
+  height = 320,
+  hideLegend = false,
+  fill = false,
 }: {
   labels: string[];
   history: (number | null)[];
   forecast: (number | null)[];
   kind?: "count" | "money";
+  height?: number;
+  hideLegend?: boolean;
+  fill?: boolean;
 }) {
   return (
     <LineChart
-      height={300}
+      height={fill ? undefined : height}
+      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
       series={[
         { data: history, label: "История", color: "#17181C", showMark: false, curve: "linear" },
         { data: forecast, label: "Прогноз", color: "#FFC400", showMark: false, curve: "linear" },
@@ -130,6 +158,7 @@ export function LongTermChart({
       yAxis={[{ valueFormatter: axisFormatter(kind) }]}
       grid={{ horizontal: true }}
       margin={{ left: 66, right: 16, top: 24, bottom: 52 }}
+      hideLegend={hideLegend}
     />
   );
 }

@@ -79,10 +79,10 @@ export function OrderDetailScreen({ data }: { data: OrderDetailVM }) {
             {data.tickets.length === 0 ? (
               <EmptyState text="Обращений по заказу нет." />
             ) : (
-              <Stack spacing={1.25}>
+              <Stack spacing={1.5}>
                 {data.tickets.map((ticket) => (
                   <Card key={ticket.id} variant="outlined" sx={{ borderColor: "#E3E6EB" }}>
-                    <Box sx={{ p: 1.75 }}>
+                    <Box sx={{ p: 2 }}>
                       <Box
                         sx={{
                           display: "flex",

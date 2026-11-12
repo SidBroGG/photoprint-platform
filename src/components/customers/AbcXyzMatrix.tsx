@@ -24,7 +24,7 @@ export function AbcXyzMatrix({ cells }: { cells: MatrixCellVM[] }) {
           sx={{
             display: "grid",
             gridTemplateColumns: "110px repeat(3, minmax(120px, 1fr))",
-            gap: 1,
+            gap: 1.5,
             minWidth: 520,
           }}
         >
@@ -56,10 +56,10 @@ export function AbcXyzMatrix({ cells }: { cells: MatrixCellVM[] }) {
                     key={`${abc}${xyz}`}
                     variant="outlined"
                     sx={{
-                      p: 1.25,
+                      p: 1.5,
                       borderColor: "#E3E6EB",
                       backgroundColor: empty ? "#FCFCFD" : ABC_BACKGROUND[abc],
-                      borderRadius: 0.5,
+                      borderRadius: 1,
                     }}
                   >
                     <Typography sx={{ fontSize: 18, fontWeight: 700, lineHeight: 1.1 }}>

@@ -19,6 +19,7 @@ import { SectionCard } from "@/components/common/SectionCard";
 import { IssueCard } from "@/components/issues/IssueCard";
 import { IssueFormDialog } from "@/components/issues/IssueFormDialog";
 import {
+  assignIssueAction,
   claimIssueAction,
   releaseIssueAction,
   setIssueStatusAction,
@@ -98,6 +99,15 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
 
   function handleRelease(issue: IssueCardVM) {
     void perform(() => releaseIssueAction(issue.id), "Задача снята с вас.");
+  }
+
+  function handleAssign(issue: IssueCardVM, employeeId: string) {
+    const employee = data.assignees.find((item) => item.id === employeeId);
+    if (!employee) return;
+    void perform(
+      () => assignIssueAction(issue.id, employeeId),
+      `Задача ${issue.id} назначена: ${employee.name}.`,
+    );
   }
 
   function handleDrop(event: DragEvent<HTMLDivElement>, status: IssueStatus) {
@@ -227,13 +237,14 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
                   }}
                   onDrop={(event) => handleDrop(event, column.status)}
                   sx={{
-                    p: 1.25,
+                    p: 1.5,
                     minHeight: 380,
                     backgroundColor: "#F7F8FA",
                     borderColor: isDropTarget ? "primary.main" : "#E3E6EB",
+                    borderRadius: 1,
                     display: "flex",
                     flexDirection: "column",
-                    gap: 1.25,
+                    gap: 1.5,
                   }}
                 >
                   <Box
@@ -267,10 +278,12 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
                     <IssueCard
                       key={issue.id}
                       issue={issue}
+                      assignees={data.assignees}
                       busy={busy}
                       onOpen={(value) => setDialog({ mode: "edit", issue: value })}
                       onClaim={handleClaim}
                       onRelease={handleRelease}
+                      onAssign={handleAssign}
                       onDragStart={setDraggingId}
                       onDragEnd={() => {
                         setDraggingId(null);

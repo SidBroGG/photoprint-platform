@@ -20,12 +20,12 @@ export function DashboardProblems({
   }
 
   return (
-    <Stack spacing={1.25}>
+    <Stack spacing={1.5}>
       {problems.map((problem) => (
         <Paper
           key={problem.id}
           variant="outlined"
-          sx={{ p: 1.75, borderColor: "#E3E6EB", borderRadius: 0.5 }}
+          sx={{ p: 2, borderColor: "#E3E6EB", borderRadius: 1 }}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1.5 }}>
             <Typography sx={{ fontSize: 14, fontWeight: 600 }}>

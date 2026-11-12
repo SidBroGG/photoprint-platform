@@ -1,13 +1,16 @@
 "use client";
 
-import type { DragEvent, MouseEvent } from "react";
+import { useState, type DragEvent, type MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import PersonAddOutlined from "@mui/icons-material/PersonAddOutlined";
 import PersonOutline from "@mui/icons-material/PersonOutlineOutlined";
 import { StatusChip } from "@/components/common/StatusChip";
-import type { IssueCardVM } from "@/lib/view/issues";
+import type { IssueAssigneeVM, IssueCardVM } from "@/lib/view/issues";
 import type { IssueCriticality } from "@/types/board";
 
 const CRITICALITY_COLORS: Record<IssueCriticality, string> = {
@@ -19,21 +22,27 @@ const CRITICALITY_COLORS: Record<IssueCriticality, string> = {
 
 export function IssueCard({
   issue,
+  assignees,
   busy,
   onOpen,
   onClaim,
   onRelease,
+  onAssign,
   onDragStart,
   onDragEnd,
 }: {
   issue: IssueCardVM;
+  assignees: IssueAssigneeVM[];
   busy: boolean;
   onOpen: (issue: IssueCardVM) => void;
   onClaim: (issue: IssueCardVM) => void;
   onRelease: (issue: IssueCardVM) => void;
+  onAssign: (issue: IssueCardVM, employeeId: string) => void;
   onDragStart: (issueId: string) => void;
   onDragEnd: () => void;
 }) {
+  const [assignAnchor, setAssignAnchor] = useState<HTMLElement | null>(null);
+
   function handleDragStart(event: DragEvent<HTMLDivElement>) {
     event.dataTransfer.setData("text/plain", issue.id);
     event.dataTransfer.effectAllowed = "move";
@@ -42,6 +51,16 @@ export function IssueCard({
 
   function stop(event: MouseEvent) {
     event.stopPropagation();
+  }
+
+  function openAssignMenu(event: MouseEvent<HTMLButtonElement>) {
+    event.stopPropagation();
+    setAssignAnchor(event.currentTarget);
+  }
+
+  function handleAssign(employeeId: string) {
+    setAssignAnchor(null);
+    onAssign(issue, employeeId);
   }
 
   return (
@@ -83,8 +102,27 @@ export function IssueCard({
       <Box
         onClick={stop}
         onKeyDown={(event) => event.stopPropagation()}
-        sx={{ display: "flex", justifyContent: "flex-end", mt: 1.25 }}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: 0.5,
+          flexWrap: "wrap",
+          mt: 1.25,
+        }}
       >
+        {issue.status !== "done" && assignees.length > 0 && (
+          <Button
+            size="small"
+            variant="text"
+            disabled={busy}
+            onClick={openAssignMenu}
+            startIcon={<PersonAddOutlined />}
+            sx={{ minWidth: 0, px: 1, fontSize: 12 }}
+          >
+            Назначить
+          </Button>
+        )}
         {issue.canClaim && (
           <Button
             size="small"
@@ -108,6 +146,31 @@ export function IssueCard({
           </Button>
         )}
       </Box>
+
+      <Menu
+        anchorEl={assignAnchor}
+        open={assignAnchor !== null}
+        onClose={() => setAssignAnchor(null)}
+        onClick={(event) => event.stopPropagation()}
+        slotProps={{ paper: { sx: { maxHeight: 360 } } }}
+      >
+        {assignees.map((assignee) => (
+          <MenuItem
+            key={assignee.id}
+            selected={assignee.id === issue.assigneeId}
+            onClick={() => handleAssign(assignee.id)}
+          >
+            <Box>
+              <Typography sx={{ fontSize: 13.5, fontWeight: 500 }}>
+                {assignee.name}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {assignee.role} · {assignee.departmentLabel}
+              </Typography>
+            </Box>
+          </MenuItem>
+        ))}
+      </Menu>
     </Card>
   );
 }
