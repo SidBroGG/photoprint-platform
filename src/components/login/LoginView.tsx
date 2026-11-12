@@ -36,12 +36,7 @@ export function LoginView({ accounts }: { accounts: DemoAccount[] }) {
           </Box>
         </Box>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 760 }}>
-          Демо-доступ без пароля. Выберите аккаунт: каждая роль видит только свои разделы,
-          а данные и права проверяются на сервере.
-        </Typography>
-
-        <Box className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <Box className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" sx={{ mt: 3 }}>
           {accounts.map((account) => (
             <Card key={account.id} sx={{ display: "flex", flexDirection: "column" }}>
               <CardContent sx={{ display: "flex", flexDirection: "column", flexGrow: 1, p: 2.5 }}>
@@ -65,10 +60,6 @@ export function LoginView({ accounts }: { accounts: DemoAccount[] }) {
             </Card>
           ))}
         </Box>
-
-        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mt: 3 }}>
-          Демо-стенд на детерминированных мок-данных. Реальные интеграции и пароли не используются.
-        </Typography>
       </Box>
     </Box>
   );

@@ -233,7 +233,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
     }));
 
   return {
-    meta: `Данные на ${formatDateTime(now)} · Europe/Moscow · демо-набор`,
+    meta: `Данные на ${formatDateTime(now)} · Europe/Moscow`,
     roleNote: ROLE_NOTES[account.role] ?? "Срез направления.",
     kpis: isCeo ? ceoKpis : kpis,
     stages,

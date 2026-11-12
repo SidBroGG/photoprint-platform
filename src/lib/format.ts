@@ -1,6 +1,6 @@
-const moneyFormatter = new Intl.NumberFormat("ru-RU", {
+const moneyFormatter = new Intl.NumberFormat("be-BY", {
   style: "currency",
-  currency: "RUB",
+  currency: "BYN",
   maximumFractionDigits: 0,
 });
 
@@ -43,10 +43,10 @@ export function formatMoney(value: number): string {
 export function formatMoneyCompact(value: number): string {
   const abs = Math.abs(value);
   if (abs >= 1_000_000) {
-    return `${(value / 1_000_000).toFixed(1).replace(".", ",")} млн ₽`;
+    return `${(value / 1_000_000).toFixed(1).replace(".", ",")} млн Br`;
   }
   if (abs >= 10_000) {
-    return `${Math.round(value / 1000)} тыс. ₽`;
+    return `${Math.round(value / 1000)} тыс. Br`;
   }
   return formatMoney(value);
 }

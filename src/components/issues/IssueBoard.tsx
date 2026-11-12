@@ -30,7 +30,6 @@ import type { IssueArea, IssueActionResult, IssueStatus } from "@/types/board";
 const STATUS_COLORS: Record<IssueStatus, string> = {
   new: "#1565C0",
   in_progress: "#B26A00",
-  review: "#6A1B9A",
   done: "#1E8E3E",
 };
 
@@ -101,14 +100,6 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
     void perform(() => releaseIssueAction(issue.id), "Задача снята с вас.");
   }
 
-  function handleStatusChange(issue: IssueCardVM, status: IssueStatus) {
-    if (status === issue.status) return;
-    void perform(
-      () => setIssueStatusAction(issue.id, status),
-      `Статус задачи ${issue.id}: ${ISSUE_STATUS_LABELS[status].toLowerCase()}.`,
-    );
-  }
-
   function handleDrop(event: DragEvent<HTMLDivElement>, status: IssueStatus) {
     event.preventDefault();
     const issueId = event.dataTransfer.getData("text/plain") || draggingId;
@@ -154,7 +145,7 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
 
         <SectionCard
           title="Канбан проблем"
-          subtitle="Перетащите карточку между колонками или смените статус внутри карточки. Критичность задаёт приоритет."
+          subtitle="Перетащите карточку между колонками, чтобы сменить статус. Критичность задаёт приоритет."
         >
           <Stack
             direction="row"
@@ -212,7 +203,7 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: "repeat(4, minmax(250px, 1fr))",
+              gridTemplateColumns: "repeat(3, minmax(250px, 1fr))",
               gap: 2,
               overflowX: "auto",
               pb: 1.5,
@@ -276,12 +267,10 @@ export function IssueBoard({ data }: { data: IssueBoardView }) {
                     <IssueCard
                       key={issue.id}
                       issue={issue}
-                      showArea={data.showAreaChips}
                       busy={busy}
                       onOpen={(value) => setDialog({ mode: "edit", issue: value })}
                       onClaim={handleClaim}
                       onRelease={handleRelease}
-                      onStatusChange={handleStatusChange}
                       onDragStart={setDraggingId}
                       onDragEnd={() => {
                         setDraggingId(null);

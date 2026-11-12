@@ -72,7 +72,7 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     id: "prod-spec",
     name: "Алексей Петров",
     role: "production_specialist",
-    roleLabel: "Специалист производства (стадия «Печать»)",
+    roleLabel: "Специалист производства",
     description: "Только своя очередь на печати и собственные просрочки.",
     home: "/production",
     employeeId: "e08",

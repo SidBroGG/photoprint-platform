@@ -1,6 +1,6 @@
 export type IssueArea = "sales" | "production" | "logistics" | "service";
 
-export type IssueStatus = "new" | "in_progress" | "review" | "done";
+export type IssueStatus = "new" | "in_progress" | "done";
 
 export type IssueCriticality = "low" | "medium" | "high" | "critical";
 

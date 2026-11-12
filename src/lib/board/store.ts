@@ -73,7 +73,7 @@ const SEED_ISSUES: SeedIssueInput[] = [
     title: "Пересмотреть цену фотокниги «Классика»",
     description:
       "Маржинальность 21% при 14 заказах за месяц. Согласовать новую цену или себестоимость.",
-    status: "review",
+    status: "in_progress",
     criticality: "medium",
     assigneeId: "sales",
     createdById: "ceo",
@@ -120,7 +120,7 @@ const SEED_ISSUES: SeedIssueInput[] = [
     title: "Калибровка печатного станка №2",
     description:
       "Проверить цветопередачу после замены чернил и зафиксировать результат в журнале.",
-    status: "review",
+    status: "in_progress",
     criticality: "medium",
     assigneeId: "prod-spec",
     createdById: "production",
@@ -215,7 +215,7 @@ const SEED_ISSUES: SeedIssueInput[] = [
     title: "Сократить регламент первого ответа",
     description:
       "Сейчас первый ответ занимает 45 минут, целевое значение — 15 минут. Подготовить изменения в регламент.",
-    status: "review",
+    status: "in_progress",
     criticality: "medium",
     assigneeId: "service",
     createdById: "ceo",

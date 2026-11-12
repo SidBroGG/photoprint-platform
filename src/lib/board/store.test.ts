@@ -40,7 +40,7 @@ describe("issue store", () => {
     for (const area of ["sales", "production", "logistics", "service"] as const) {
       expect(issues.filter((issue) => issue.area === area)).toHaveLength(4);
     }
-    for (const status of ["new", "in_progress", "review", "done"] as const) {
+    for (const status of ["new", "in_progress", "done"] as const) {
       expect(issues.some((issue) => issue.status === status)).toBe(true);
     }
     for (const criticality of ["low", "medium", "high", "critical"] as const) {
@@ -130,11 +130,11 @@ describe("issue store", () => {
       title: "Обновлённая проблема",
       description: "Новое описание.",
       criticality: "medium",
-      status: "review",
+      status: "in_progress",
     });
     expect(result.ok).toBe(true);
     expect(issue.title).toBe("Обновлённая проблема");
-    expect(issue.status).toBe("review");
+    expect(issue.status).toBe("in_progress");
     expect(issue.criticality).toBe("medium");
 
     expect(

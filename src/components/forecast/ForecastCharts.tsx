@@ -7,10 +7,10 @@ function axisFormatter(kind: "count" | "money") {
   if (kind === "money") {
     return (value: number) => {
       if (Math.abs(value) >= 1_000_000) {
-        return `${(value / 1_000_000).toFixed(1).replace(".", ",")} млн`;
+        return `${(value / 1_000_000).toFixed(1).replace(".", ",")} млн Br`;
       }
       if (Math.abs(value) >= 1000) {
-        return `${Math.round(value / 1000)} тыс.`;
+        return `${Math.round(value / 1000)} тыс. Br`;
       }
       return String(value);
     };

@@ -4,7 +4,7 @@ import type { IssueArea, IssueCriticality, IssueStatus } from "@/types/board";
 
 export const ISSUE_AREAS: IssueArea[] = ["sales", "production", "logistics", "service"];
 
-export const ISSUE_STATUSES: IssueStatus[] = ["new", "in_progress", "review", "done"];
+export const ISSUE_STATUSES: IssueStatus[] = ["new", "in_progress", "done"];
 
 export const ISSUE_CRITICALITIES: IssueCriticality[] = [
   "low",
@@ -23,7 +23,6 @@ export const ISSUE_AREA_LABELS: Record<IssueArea, string> = {
 export const ISSUE_STATUS_LABELS: Record<IssueStatus, string> = {
   new: "Новые",
   in_progress: "В работе",
-  review: "На проверке",
   done: "Решено",
 };
 

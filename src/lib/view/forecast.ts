@@ -113,7 +113,7 @@ export function getForecastScreenView(
       },
       {
         label: "Средний чек",
-        value: totalOrders > 0 ? formatNumber(Math.round(totalRevenue / totalOrders)) + " ₽" : "—",
+        value: totalOrders > 0 ? formatNumber(Math.round(totalRevenue / totalOrders)) + " Br" : "—",
         hint: "Прогнозная выручка / заказы",
       },
     );
@@ -242,9 +242,9 @@ export function getForecastScreenView(
     }));
 
   return {
-    meta: `Горизонт 21 день и 3 месяца · ${formatDate(now)} · демо-прогноз на мок-данных`,
+    meta: `Горизонт 21 день и 3 месяца · ${formatDate(now)}`,
     methodNote:
-      "Краткосрочный прогноз: линейный тренд МНК и сезонные коэффициенты дня недели по 56 дням истории. Долгосрочный: 12 месяцев истории, месячный тренд и сезонный индекс. Демо-прогноз не является гарантией точности.",
+      "Краткосрочный прогноз: линейный тренд МНК и сезонные коэффициенты дня недели по 56 дням истории. Долгосрочный: 12 месяцев истории, месячный тренд и сезонный индекс.",
     showSales,
     showProduction,
     showLogistics,
