@@ -83,24 +83,24 @@ interface ProductSeed {
 }
 
 const PRODUCT_SEEDS: ProductSeed[] = [
-  { name: "Классическая фотокнига 20×20", category: "photobooks", price: 81, cost: 46, status: "active" },
-  { name: "Премиум-фотокнига 30×30", category: "photobooks", price: 169, cost: 95, status: "active" },
-  { name: "Мини-фотокнига 15×15", category: "photobooks", price: 49, cost: 28, status: "active" },
-  { name: "Фотокнига «Свадебная»", category: "photobooks", price: 249, cost: 140, status: "active" },
-  { name: "Фотокнига «Выпускная»", category: "photobooks", price: 139, cost: 78, status: "active" },
-  { name: "Фотокнига «Календарь года»", category: "photobooks", price: 99, cost: 56, status: "active" },
-  { name: "Фотокнига «Путешествие»", category: "photobooks", price: 119, cost: 67, status: "active" },
-  { name: "Фотокнига «Детская»", category: "photobooks", price: 79, cost: 45, status: "active" },
-  { name: "Фотокнига «Юбилейная»", category: "photobooks", price: 169, cost: 95, status: "active" },
-  { name: "Фотокнига «Люкс»", category: "photobooks", price: 299, cost: 168, status: "discontinued" },
+  { name: "Классическая фотокнига 20×20", category: "photobooks", price: 99, cost: 51, status: "active" },
+  { name: "Премиум-фотокнига 30×30", category: "photobooks", price: 219, cost: 125, status: "active" },
+  { name: "Мини-фотокнига 15×15", category: "photobooks", price: 59, cost: 34, status: "active" },
+  { name: "Фотокнига «Свадебная»", category: "photobooks", price: 329, cost: 188, status: "active" },
+  { name: "Фотокнига «Выпускная»", category: "photobooks", price: 179, cost: 102, status: "active" },
+  { name: "Фотокнига «Календарь года»", category: "photobooks", price: 129, cost: 74, status: "active" },
+  { name: "Фотокнига «Путешествие»", category: "photobooks", price: 149, cost: 85, status: "active" },
+  { name: "Фотокнига «Детская»", category: "photobooks", price: 99, cost: 57, status: "active" },
+  { name: "Фотокнига «Юбилейная»", category: "photobooks", price: 209, cost: 119, status: "active" },
+  { name: "Фотокнига «Люкс»", category: "photobooks", price: 379, cost: 216, status: "discontinued" },
   { name: "Фотопринт A4", category: "photoproducts", price: 5, cost: 4, status: "active" },
-  { name: "Фотопринт A3", category: "photoproducts", price: 11, cost: 6, status: "active" },
-  { name: "Холст 40×60", category: "photoproducts", price: 129, cost: 72, status: "active" },
-  { name: "Пазл фотографический", category: "photoproducts", price: 29, cost: 16, status: "active" },
-  { name: "Кружка с фото", category: "photoproducts", price: 27, cost: 15, status: "active" },
-  { name: "Календарь настенный", category: "photoproducts", price: 29, cost: 16, status: "active" },
-  { name: "Фотопанно 60×90", category: "photoproducts", price: 199, cost: 111, status: "active" },
-  { name: "Открытки (набор 10 шт.)", category: "photoproducts", price: 17, cost: 10, status: "discontinued" },
+  { name: "Фотопринт A3", category: "photoproducts", price: 14, cost: 8, status: "active" },
+  { name: "Холст 40×60", category: "photoproducts", price: 159, cost: 91, status: "active" },
+  { name: "Пазл фотографический", category: "photoproducts", price: 35, cost: 20, status: "active" },
+  { name: "Кружка с фото", category: "photoproducts", price: 35, cost: 20, status: "active" },
+  { name: "Календарь настенный", category: "photoproducts", price: 35, cost: 20, status: "active" },
+  { name: "Фотопанно 60×90", category: "photoproducts", price: 259, cost: 148, status: "active" },
+  { name: "Открытки (набор 10 шт.)", category: "photoproducts", price: 25, cost: 14, status: "discontinued" },
 ];
 
 interface EmployeeSeed {
@@ -141,7 +141,7 @@ const WEEKDAY_FACTOR = [1.08, 1.08, 1.04, 1.04, 1.0, 0.82, 0.74];
 const CARRIERS = [
   { name: "СДЭК", prefix: "SDEK" },
   { name: "Boxberry", prefix: "BOX" },
-  { name: "Почта России", prefix: "POST" },
+  { name: "Почта Беларуси", prefix: "POST" },
   { name: "Курьер", prefix: "CR" },
 ];
 
@@ -397,11 +397,18 @@ export function createDataset(now: Date = new Date(), seed: number = DATA_SEED):
   }
 
   function quantityFor(client: Client): number {
+    if (client.segment === "B2B") {
+      return rng.weighted([
+        { value: 4, weight: 35 },
+        { value: 8, weight: 30 },
+        { value: 12, weight: 20 },
+        { value: 20, weight: 15 },
+      ]);
+    }
     return rng.weighted([
-      { value: 1, weight: client.segment === "B2B" ? 62 : 82 },
-      { value: 2, weight: client.segment === "B2B" ? 26 : 14 },
+      { value: 1, weight: 72 },
+      { value: 2, weight: 20 },
       { value: 3, weight: 8 },
-      { value: 4, weight: 4 },
     ]);
   }
 

@@ -524,7 +524,7 @@ export function getDashboardView(account: DemoAccount, now: Date = new Date()): 
   const { problems, total: problemsTotal } = buildDashboardProblems(account.role, now);
 
   return {
-    meta: `Данные на ${formatDateTime(now)} · Europe/Moscow`,
+    meta: `Данные на ${formatDateTime(now)} · Беларусь, Великий Камень`,
     roleNote: ROLE_NOTES[account.role] ?? "Срез направления.",
     kpis: isCeo ? ceoKpis : kpis,
     stages,

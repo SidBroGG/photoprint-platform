@@ -103,8 +103,8 @@ describe("role scopes", () => {
     const salesNav = navItemsForRole("sales").map((item) => item.page);
     expect(salesNav).toEqual([
       "dashboard",
-      "metrics",
       "issues",
+      "metrics",
       "orders",
       "customers",
       "products",
@@ -112,7 +112,7 @@ describe("role scopes", () => {
       "forecast",
     ]);
     const marketingNav = navItemsForRole("marketing").map((item) => item.page);
-    expect(marketingNav).toEqual(["dashboard", "metrics", "issues", "personnel"]);
+    expect(marketingNav).toEqual(["dashboard", "issues", "metrics", "personnel"]);
   });
 
   test("scopes dashboard domains", () => {

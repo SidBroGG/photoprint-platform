@@ -9,14 +9,14 @@ const numberFormatter = new Intl.NumberFormat("ru-RU", {
 });
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
-  timeZone: "Europe/Moscow",
+  timeZone: "Europe/Minsk",
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
 });
 
 const dateTimeFormatter = new Intl.DateTimeFormat("ru-RU", {
-  timeZone: "Europe/Moscow",
+  timeZone: "Europe/Minsk",
   day: "2-digit",
   month: "2-digit",
   year: "numeric",
@@ -25,13 +25,13 @@ const dateTimeFormatter = new Intl.DateTimeFormat("ru-RU", {
 });
 
 const dayMonthFormatter = new Intl.DateTimeFormat("ru-RU", {
-  timeZone: "Europe/Moscow",
+  timeZone: "Europe/Minsk",
   day: "numeric",
   month: "short",
 });
 
 const timeFormatter = new Intl.DateTimeFormat("ru-RU", {
-  timeZone: "Europe/Moscow",
+  timeZone: "Europe/Minsk",
   hour: "2-digit",
   minute: "2-digit",
 });

@@ -232,7 +232,7 @@ export function getMarketingDashboardView(
   }
 
   return {
-    meta: `30 дней · ${formatNumber(totals.visits)} визитов · ${formatDateTime(now)} · Europe/Moscow`,
+    meta: `30 дней · ${formatNumber(totals.visits)} визитов · ${formatDateTime(now)} · Беларусь, Великий Камень`,
     note:
       "Срез маркетинга: воронка сайта, каналы привлечения, конверсия и стоимость привлечения. Показаны только маркетинговые метрики.",
     kpis: [

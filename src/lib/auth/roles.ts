@@ -106,8 +106,8 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Обзор", page: "dashboard", icon: "dashboard" },
-  { href: "/metrics", label: "Метрики", page: "metrics", icon: "metrics" },
   { href: "/issues", label: "Канбан", page: "issues", icon: "board" },
+  { href: "/metrics", label: "Метрики", page: "metrics", icon: "metrics" },
   { href: "/orders", label: "Заказы", page: "orders", icon: "orders" },
   { href: "/customers", label: "Клиенты", page: "customers", icon: "customers" },
   { href: "/products", label: "Продукты", page: "products", icon: "products" },

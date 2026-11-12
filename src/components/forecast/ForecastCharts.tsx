@@ -3,20 +3,34 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 import { BarChart } from "@mui/x-charts/BarChart";
 
+const numberFormatter = new Intl.NumberFormat("ru-RU", {
+  maximumFractionDigits: 0,
+});
+
 function axisFormatter(kind: "count" | "money") {
   if (kind === "money") {
     return (value: number) => {
       if (Math.abs(value) >= 1_000_000) {
         return `${(value / 1_000_000).toFixed(1).replace(".", ",")} млн Br`;
       }
-      if (Math.abs(value) >= 1000) {
-        return `${Math.round(value / 1000)} тыс. Br`;
-      }
-      return String(value);
+      return `${numberFormatter.format(Math.round(value))} Br`;
     };
   }
   return (value: number) => String(value);
 }
+
+function xTickLabelInterval(labels: string[]) {
+  const step = Math.max(1, Math.ceil((labels.length - 1) / 5));
+  return (_value: string, index: number) =>
+    index % step === 0 && index < labels.length - 1;
+}
+
+const fillSx = {
+  width: "100%",
+  height: "100%",
+  flex: 1,
+  "& svg": { overflow: "visible" },
+} as const;
 
 export function DailyForecastChart({
   labels,
@@ -40,12 +54,25 @@ export function DailyForecastChart({
   return (
     <LineChart
       height={fill ? undefined : height}
-      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
+      sx={fill ? fillSx : { width: "100%" }}
       series={[{ data: values, label, color, showMark: false, curve: "linear" }]}
-      xAxis={[{ scaleType: "point", data: labels, tickLabelStyle: { fontSize: 10 } }]}
-      yAxis={[{ valueFormatter: axisFormatter(kind) }]}
+      xAxis={[
+        {
+          scaleType: "point",
+          data: labels,
+          tickLabelStyle: { fontSize: 10 },
+          tickLabelInterval: xTickLabelInterval(labels),
+        },
+      ]}
+      yAxis={[
+        {
+          valueFormatter: axisFormatter(kind),
+          tickLabelStyle: { fontSize: 10 },
+          width: 68,
+        },
+      ]}
       grid={{ horizontal: true }}
-      margin={{ left: 66, right: 16, top: 24, bottom: 48 }}
+      margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
       hideLegend={hideLegend}
     />
   );
@@ -69,7 +96,7 @@ export function StageDemandChart({
   return (
     <LineChart
       height={fill ? undefined : height}
-      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
+      sx={fill ? fillSx : { width: "100%" }}
       series={[
         {
           data: orders,
@@ -97,9 +124,16 @@ export function StageDemandChart({
           showMark: false,
         },
       ]}
-      xAxis={[{ scaleType: "point", data: labels, tickLabelStyle: { fontSize: 10 } }]}
+      xAxis={[
+        {
+          scaleType: "point",
+          data: labels,
+          tickLabelStyle: { fontSize: 10 },
+          tickLabelInterval: xTickLabelInterval(labels),
+        },
+      ]}
       grid={{ horizontal: true }}
-      margin={{ left: 44, right: 16, top: 24, bottom: 64 }}
+      margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
       hideLegend={hideLegend}
     />
   );
@@ -119,11 +153,18 @@ export function ShipmentsChart({
   return (
     <BarChart
       height={fill ? undefined : height}
-      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
+      sx={fill ? fillSx : { width: "100%" }}
       series={[{ data: values, label: "Отправления", color: "#FFC400" }]}
-      xAxis={[{ scaleType: "band", data: labels, tickLabelStyle: { fontSize: 10 } }]}
+      xAxis={[
+        {
+          scaleType: "band",
+          data: labels,
+          tickLabelStyle: { fontSize: 10 },
+          tickLabelInterval: xTickLabelInterval(labels),
+        },
+      ]}
       grid={{ horizontal: true }}
-      margin={{ left: 44, right: 16, top: 24, bottom: 48 }}
+      margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
       hideLegend
     />
   );
@@ -149,15 +190,28 @@ export function LongTermChart({
   return (
     <LineChart
       height={fill ? undefined : height}
-      sx={fill ? { width: "100%", height: "100%", flex: 1 } : { width: "100%" }}
+      sx={fill ? fillSx : { width: "100%" }}
       series={[
         { data: history, label: "История", color: "#17181C", showMark: false, curve: "linear" },
         { data: forecast, label: "Прогноз", color: "#FFC400", showMark: false, curve: "linear" },
       ]}
-      xAxis={[{ scaleType: "point", data: labels, tickLabelStyle: { fontSize: 10 } }]}
-      yAxis={[{ valueFormatter: axisFormatter(kind) }]}
+      xAxis={[
+        {
+          scaleType: "point",
+          data: labels,
+          tickLabelStyle: { fontSize: 10 },
+          tickLabelInterval: xTickLabelInterval(labels),
+        },
+      ]}
+      yAxis={[
+        {
+          valueFormatter: axisFormatter(kind),
+          tickLabelStyle: { fontSize: 10 },
+          width: 68,
+        },
+      ]}
       grid={{ horizontal: true }}
-      margin={{ left: 66, right: 16, top: 24, bottom: 52 }}
+      margin={{ left: 0, right: 0, top: 8, bottom: 0 }}
       hideLegend={hideLegend}
     />
   );
