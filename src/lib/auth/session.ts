@@ -27,6 +27,6 @@ export async function requireSession(): Promise<DemoAccount> {
 
 export async function requirePage(page: PageKey): Promise<DemoAccount> {
   const account = await requireSession();
-  if (!canAccess(account.role, page)) redirect(homeRoute());
+  if (!canAccess(account.role, page)) redirect(homeRoute(account.role));
   return account;
 }

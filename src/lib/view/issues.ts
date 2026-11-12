@@ -55,6 +55,8 @@ const ROLE_NOTES: Record<string, string> = {
     "Проблемы и процессы производства. Перетаскивайте карточки между колонками или меняйте статус в карточке.",
   logistics_service:
     "Процессы логистики и клиентского сервиса. Фильтруйте категории, закрепляйте задачи и контролируйте критичность.",
+  marketing:
+    "Задачи маркетинга вынесены в отдельный раздел. Канбан доступен руководителям процессов.",
 };
 
 export function getIssueBoardView(
@@ -134,7 +136,7 @@ export function getIssueBoardView(
     issues,
     areas,
     createAreas: areas,
-    defaultArea: allowedAreas[0],
+    defaultArea: allowedAreas[0] ?? "sales",
     showAreaChips: areas.length > 1,
   };
 }

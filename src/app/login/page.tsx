@@ -7,6 +7,6 @@ export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {
   const account = await getSession();
-  if (account) redirect(homeRoute());
+  if (account) redirect(homeRoute(account.role));
   return <LoginView accounts={DEMO_ACCOUNTS} />;
 }

@@ -24,6 +24,7 @@ const ALL_PAGES: PageKey[] = [
   "service",
   "personnel",
   "forecast",
+  "marketing",
 ];
 
 const ALL_ROLES: Role[] = [
@@ -31,6 +32,7 @@ const ALL_ROLES: Role[] = [
   "sales",
   "production",
   "logistics_service",
+  "marketing",
 ];
 
 describe("page access matrix", () => {
@@ -62,26 +64,36 @@ describe("page access matrix", () => {
     expect(canAccess("sales", "issues")).toBe(true);
     expect(canAccess("production", "issues")).toBe(true);
     expect(canAccess("logistics_service", "issues")).toBe(true);
+    expect(canAccess("marketing", "marketing")).toBe(true);
+    expect(canAccess("marketing", "dashboard")).toBe(false);
+    expect(canAccess("marketing", "orders")).toBe(false);
+    expect(canAccess("marketing", "customers")).toBe(false);
+    expect(canAccess("marketing", "products")).toBe(false);
+    expect(canAccess("marketing", "forecast")).toBe(false);
+    expect(canAccess("ceo", "marketing")).toBe(true);
   });
 });
 
 describe("accounts and routing", () => {
-  test("has four unique demo accounts with known home routes", () => {
-    expect(DEMO_ACCOUNTS).toHaveLength(4);
+  test("has five unique demo accounts with known home routes", () => {
+    expect(DEMO_ACCOUNTS).toHaveLength(5);
     const ids = new Set(DEMO_ACCOUNTS.map((account) => account.id));
-    expect(ids.size).toBe(4);
+    expect(ids.size).toBe(5);
     for (const account of DEMO_ACCOUNTS) {
       expect(findAccount(account.id)?.name).toBe(account.name);
-      expect(homeRoute()).toBe(account.home);
+      expect(homeRoute(account.role)).toBe(account.home);
       expect(account.roleLabel.length).toBeGreaterThan(0);
       expect(account.description.length).toBeGreaterThan(0);
     }
     expect(findAccount("unknown")).toBeNull();
   });
 
-  test("sends every role to the dashboard", () => {
-    expect(homeRoute()).toBe("/dashboard");
-    expect(DEMO_ACCOUNTS.every((account) => account.home === "/dashboard")).toBe(true);
+  test("routes marketing to its own dashboard", () => {
+    expect(homeRoute("ceo")).toBe("/dashboard");
+    expect(homeRoute("marketing")).toBe("/marketing");
+    expect(DEMO_ACCOUNTS.every((account) => account.home === homeRoute(account.role))).toBe(
+      true,
+    );
   });
 });
 
@@ -99,6 +111,8 @@ describe("role scopes", () => {
       "personnel",
       "forecast",
     ]);
+    const marketingNav = navItemsForRole("marketing").map((item) => item.page);
+    expect(marketingNav).toEqual(["marketing"]);
   });
 
   test("scopes dashboard domains", () => {
@@ -106,6 +120,7 @@ describe("role scopes", () => {
     expect(dashboardDomains("sales")).toEqual(["sales", "finance"]);
     expect(dashboardDomains("production")).toEqual(["production"]);
     expect(dashboardDomains("logistics_service")).toEqual(["logistics", "service"]);
+    expect(dashboardDomains("marketing")).toEqual([]);
   });
 
   test("masks money only outside sales and CEO", () => {
@@ -113,6 +128,7 @@ describe("role scopes", () => {
     expect(canSeeOrderMoney("sales")).toBe(true);
     expect(canSeeOrderMoney("production")).toBe(false);
     expect(canSeeOrderMoney("logistics_service")).toBe(false);
+    expect(canSeeOrderMoney("marketing")).toBe(false);
   });
 
   test("scopes personnel departments", () => {
@@ -120,5 +136,6 @@ describe("role scopes", () => {
     expect(personnelDepartments("sales")).toEqual(["sales"]);
     expect(personnelDepartments("production")).toEqual(["production"]);
     expect(personnelDepartments("logistics_service")).toEqual(["logistics", "service"]);
+    expect(personnelDepartments("marketing")).toBeUndefined();
   });
 });

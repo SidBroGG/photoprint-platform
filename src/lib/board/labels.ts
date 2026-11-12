@@ -43,6 +43,8 @@ export function visibleIssueAreas(role: Role): IssueArea[] {
       return ["production"];
     case "logistics_service":
       return ["logistics", "service"];
+    case "marketing":
+      return [];
   }
 }
 

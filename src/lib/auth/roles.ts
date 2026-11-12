@@ -1,6 +1,6 @@
 import type { Department } from "@/types/domain";
 
-export type Role = "ceo" | "sales" | "production" | "logistics_service";
+export type Role = "ceo" | "sales" | "production" | "logistics_service" | "marketing";
 
 export type PageKey =
   | "dashboard"
@@ -12,7 +12,8 @@ export type PageKey =
   | "logistics"
   | "service"
   | "personnel"
-  | "forecast";
+  | "forecast"
+  | "marketing";
 
 export type DashboardDomain = "sales" | "finance" | "production" | "logistics" | "service";
 
@@ -62,6 +63,15 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     home: "/dashboard",
     employeeId: "e14",
   },
+  {
+    id: "marketing",
+    name: "Екатерина Соколова",
+    role: "marketing",
+    roleLabel: "Руководитель маркетинга",
+    description:
+      "Воронка сайта, каналы привлечения, конверсия, CAC и повторные продажи.",
+    home: "/marketing",
+  },
 ];
 
 export const PAGE_ACCESS: Record<PageKey, Role[]> = {
@@ -75,6 +85,7 @@ export const PAGE_ACCESS: Record<PageKey, Role[]> = {
   service: ["ceo", "logistics_service"],
   personnel: ["ceo", "sales", "production", "logistics_service"],
   forecast: ["ceo", "sales", "production", "logistics_service"],
+  marketing: ["ceo", "marketing"],
 };
 
 export const ROLE_LABELS: Record<Role, string> = {
@@ -82,6 +93,7 @@ export const ROLE_LABELS: Record<Role, string> = {
   sales: "Руководитель продаж и финансов",
   production: "Руководитель производства",
   logistics_service: "Руководитель логистики и клиентского сервиса",
+  marketing: "Руководитель маркетинга",
 };
 
 export interface NavItem {
@@ -102,6 +114,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/service", label: "Клиентский сервис", page: "service", icon: "service" },
   { href: "/personnel", label: "Персонал", page: "personnel", icon: "personnel" },
   { href: "/forecast", label: "Прогноз", page: "forecast", icon: "forecast" },
+  { href: "/marketing", label: "Маркетинг", page: "marketing", icon: "marketing" },
 ];
 
 export function findAccount(id: string): DemoAccount | null {
@@ -112,8 +125,8 @@ export function canAccess(role: Role, page: PageKey): boolean {
   return PAGE_ACCESS[page].includes(role);
 }
 
-export function homeRoute(): string {
-  return "/dashboard";
+export function homeRoute(role: Role): string {
+  return role === "marketing" ? "/marketing" : "/dashboard";
 }
 
 export function navItemsForRole(role: Role): NavItem[] {
@@ -130,6 +143,8 @@ export function dashboardDomains(role: Role): DashboardDomain[] {
       return ["production"];
     case "logistics_service":
       return ["logistics", "service"];
+    case "marketing":
+      return [];
     default:
       return [];
   }
@@ -145,6 +160,8 @@ export function personnelDepartments(role: Role): Department[] | undefined {
       return ["production"];
     case "logistics_service":
       return ["logistics", "service"];
+    case "marketing":
+      return undefined;
     default:
       return undefined;
   }

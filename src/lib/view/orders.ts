@@ -68,6 +68,7 @@ function ordersMode(account: DemoAccount): OrdersMode {
   if (account.role === "ceo") return "full";
   if (account.role === "sales") return "sales";
   if (account.role === "production") return "production";
+  if (account.role === "marketing") return "sales";
   return "logistics";
 }
 

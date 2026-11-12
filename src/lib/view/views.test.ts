@@ -7,6 +7,7 @@ import { getOrdersView, getOrderDetailView } from "./orders";
 import { getPersonnelScreenView } from "./personnel";
 import { getForecastScreenView } from "./forecast";
 import { getIssueBoardView } from "./issues";
+import { getMarketingDashboardView } from "./marketing";
 
 const NOW = new Date("2026-11-11T09:30:00Z");
 const dataset = createDataset(NOW);
@@ -117,5 +118,36 @@ describe("view models respect role restrictions", () => {
     const service = getForecastScreenView(findAccount("service")!, NOW);
     expect(service.showLogistics).toBe(true);
     expect(service.showProduction).toBe(false);
+  });
+
+  test("builds the marketing funnel with a clear bottleneck", () => {
+    const marketing = getMarketingDashboardView(NOW);
+    expect(marketing.funnel.map((stage) => stage.key)).toEqual([
+      "visit",
+      "template_selected",
+      "template_modified",
+      "payment",
+    ]);
+
+    const counts = marketing.funnel.map((stage) => stage.count);
+    for (let index = 1; index < counts.length; index += 1) {
+      expect(counts[index]!).toBeLessThanOrEqual(counts[index - 1]!);
+    }
+
+    expect(marketing.funnel.find((stage) => stage.isBottleneck)?.key).toBe(
+      "template_modified",
+    );
+    expect(marketing.bottleneck?.stageLabel).toBe("Изменение шаблона");
+    expect(marketing.kpis.map((kpi) => kpi.label)).toContain("CAC");
+    expect(marketing.channels).toHaveLength(5);
+    expect(marketing.daily.labels).toHaveLength(30);
+    expect(marketing.daily.visits).toHaveLength(30);
+    expect(marketing.daily.payments).toHaveLength(30);
+
+    const totalPayments =
+      marketing.funnel.find((stage) => stage.key === "payment")?.count ?? 0;
+    expect(marketing.daily.payments.reduce((sum, value) => sum + value, 0)).toBe(
+      totalPayments,
+    );
   });
 });

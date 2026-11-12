@@ -31,6 +31,7 @@ import LocalShippingOutlined from "@mui/icons-material/LocalShippingOutlined";
 import SupportAgentOutlined from "@mui/icons-material/SupportAgentOutlined";
 import PeopleAltOutlined from "@mui/icons-material/PeopleAltOutlined";
 import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
+import CampaignOutlined from "@mui/icons-material/CampaignOutlined";
 import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
 import type { ReactNode } from "react";
 import type { NavItem } from "@/lib/auth/roles";
@@ -49,6 +50,7 @@ const ICONS: Record<string, ReactNode> = {
   service: <SupportAgentOutlined />,
   personnel: <PeopleAltOutlined />,
   forecast: <TrendingUpOutlined />,
+  marketing: <CampaignOutlined />,
 };
 
 function initials(name: string): string {

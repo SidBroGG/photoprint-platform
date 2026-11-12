@@ -51,6 +51,7 @@ const ROLE_NOTES: Record<string, string> = {
   sales: "Срез направления: продажи, финансы, клиенты и продукты.",
   production: "Срез направления: производство и сроки изготовления.",
   logistics_service: "Срез направления: доставка, обращения и SLA.",
+  marketing: "Срез направления: воронка сайта, каналы привлечения и конверсия.",
 };
 
 export function getDashboardView(account: DemoAccount, now: Date = new Date()): DashboardView {
