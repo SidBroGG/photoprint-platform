@@ -1,4 +1,4 @@
-export type IssueArea = "sales" | "production" | "logistics" | "service";
+export type IssueArea = "sales" | "production" | "logistics" | "service" | "marketing";
 
 export type IssueStatus = "new" | "in_progress" | "done";
 

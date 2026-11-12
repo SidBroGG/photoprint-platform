@@ -2,7 +2,14 @@ import type { DemoAccount } from "@/lib/auth/roles";
 import { getDataset } from "@/lib/data/store";
 import { buildForecast } from "@/lib/analytics/forecast";
 import { STAGE_CAPACITY } from "@/types/domain";
-import { formatDate, formatDayMonth, formatMoneyCompact, formatNumber, formatPercent } from "@/lib/format";
+import {
+  formatDate,
+  formatDayMonth,
+  formatMoney,
+  formatMoneyCompact,
+  formatNumber,
+  formatPercent,
+} from "@/lib/format";
 import { monthKeyLabel } from "@/lib/dates";
 import type { KpiVM } from "@/lib/view/dashboard";
 
@@ -113,7 +120,10 @@ export function getForecastScreenView(
       },
       {
         label: "Средний чек",
-        value: totalOrders > 0 ? formatNumber(Math.round(totalRevenue / totalOrders)) + " Br" : "—",
+        value:
+          totalOrders > 0
+            ? formatMoney(Math.round(totalRevenue / totalOrders))
+            : "—",
         hint: "Прогнозная выручка / заказы",
       },
     );

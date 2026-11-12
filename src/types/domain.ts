@@ -22,7 +22,7 @@ export type ShipmentStatus = "in_transit" | "delayed" | "delivered";
 
 export type TicketStatus = "open" | "in_progress" | "closed";
 
-export type Department = "sales" | "production" | "logistics" | "service";
+export type Department = "sales" | "production" | "logistics" | "service" | "marketing";
 
 export type DeliveryMethod = "delivery" | "pickup";
 

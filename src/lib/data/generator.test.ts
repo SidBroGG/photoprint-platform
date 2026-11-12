@@ -29,7 +29,7 @@ describe("createDataset", () => {
   test("has the expected scale and shape", () => {
     expect(dataset.clients).toHaveLength(40);
     expect(dataset.products).toHaveLength(18);
-    expect(dataset.employees).toHaveLength(18);
+    expect(dataset.employees).toHaveLength(21);
     expect(dataset.orders.length).toBeGreaterThan(2000);
     expect(dataset.orders.length).toBeLessThan(3500);
     expect(dataset.shipments.length).toBeGreaterThan(1000);

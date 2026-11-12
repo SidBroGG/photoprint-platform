@@ -1,8 +1,5 @@
-import { requirePage } from "@/lib/auth/session";
-import { getMarketingDashboardView } from "@/lib/view/marketing";
-import { MarketingDashboardScreen } from "@/components/marketing/MarketingDashboardScreen";
+import { redirect } from "next/navigation";
 
-export default async function MarketingPage() {
-  await requirePage("marketing");
-  return <MarketingDashboardScreen data={getMarketingDashboardView()} />;
+export default function MarketingPage() {
+  redirect("/metrics");
 }

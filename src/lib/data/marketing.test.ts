@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { createDataset, DATA_SEED } from "@/lib/data/generator";
 import { moscowDate, moscowDayIndex } from "@/lib/dates";
+import { buildMarketingForecast } from "@/lib/analytics/marketingForecast";
 import { createMarketingDataset } from "./marketing";
 
 const NOW = new Date("2026-11-11T09:30:00Z");
@@ -71,5 +72,20 @@ describe("createMarketingDataset", () => {
     expect(
       marketing.channels.reduce((sum, channel) => sum + channel.cost, 0),
     ).toBe(marketing.totals.cost);
+  });
+
+  test("builds a deterministic non-negative 21-day forecast", () => {
+    const forecast = buildMarketingForecast(marketing, NOW);
+    const second = buildMarketingForecast(marketing, NOW);
+
+    expect(forecast).toHaveLength(21);
+    expect(second.map((point) => point.visits)).toEqual(
+      forecast.map((point) => point.visits),
+    );
+    for (const point of forecast) {
+      expect(point.visits).toBeGreaterThanOrEqual(0);
+      expect(point.payments).toBeGreaterThanOrEqual(0);
+      expect(point.revenue).toBeGreaterThanOrEqual(0);
+    }
   });
 });

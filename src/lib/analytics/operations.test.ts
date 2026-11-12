@@ -94,5 +94,11 @@ describe("personnel workload", () => {
           row.employee.department === "logistics" || row.employee.department === "service",
       ),
     ).toBe(true);
+
+    const marketing = personnelView(dataset, NOW, ["marketing"]);
+    expect(marketing.headcount).toBe(3);
+    expect(
+      marketing.workloads.every((row) => row.employee.department === "marketing"),
+    ).toBe(true);
   });
 });

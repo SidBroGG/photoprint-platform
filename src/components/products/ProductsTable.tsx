@@ -6,6 +6,7 @@ import type { DiscontinuedRowVM, ProductRowVM } from "@/lib/view/products";
 
 const PRODUCT_COLUMNS: DataColumn[] = [
   { key: "product", label: "Продукт", width: 260 },
+  { key: "price", label: "Цена", align: "right", width: 100 },
   { key: "orders", label: "Заказы", align: "right", width: 90 },
   { key: "revenue", label: "Выручка", align: "right", width: 130 },
   { key: "margin", label: "Маржа", align: "right", width: 90 },
@@ -26,6 +27,7 @@ export function ProductsTable({ rows }: { rows: ProductRowVM[] }) {
     id: row.id,
     cells: {
       product: { text: row.name, secondary: row.categoryLabel },
+      price: row.priceLabel,
       orders: String(row.orders),
       revenue: { text: row.revenueLabel, strong: true },
       margin: row.marginLabel,

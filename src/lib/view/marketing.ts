@@ -1,4 +1,5 @@
 import { buildCustomerAnalytics } from "@/lib/analytics/customers";
+import { buildMarketingForecast } from "@/lib/analytics/marketingForecast";
 import { getMarketingDataset } from "@/lib/data/marketing";
 import { getDataset } from "@/lib/data/store";
 import {
@@ -45,6 +46,15 @@ export interface MarketingChannelVM {
   revenueShareLabel: string;
 }
 
+export interface MarketingProblemVM {
+  id: string;
+  title: string;
+  detail: string;
+  action: string;
+  severity: "critical" | "warning";
+  severityLabel: string;
+}
+
 export interface MarketingDashboardView {
   meta: string;
   note: string;
@@ -52,6 +62,13 @@ export interface MarketingDashboardView {
   funnel: MarketingFunnelStageVM[];
   bottleneck: MarketingBottleneckVM | null;
   channels: MarketingChannelVM[];
+  channelProblems: MarketingProblemVM[];
+  forecast: {
+    labels: string[];
+    visits: number[];
+    payments: number[];
+    revenue: number[];
+  };
   daily: {
     labels: string[];
     visits: number[];
@@ -170,6 +187,50 @@ export function getMarketingDashboardView(
       ),
     }));
 
+  const forecast = buildMarketingForecast(data, now);
+  const channelProblems: MarketingProblemVM[] = [];
+  const channelsWithTraffic = data.channels.filter((channel) => channel.visits > 0);
+  if (channelsWithTraffic.length > 0) {
+    const worstConversion = channelsWithTraffic
+      .slice()
+      .sort(
+        (a, b) =>
+          a.payments / a.visits - b.payments / b.visits,
+      )[0]!;
+    channelProblems.push({
+      id: `conversion-${worstConversion.id}`,
+      title: `Низкая конверсия: ${worstConversion.label}`,
+      detail: `Конверсия ${formatPercent(
+        worstConversion.payments / worstConversion.visits,
+        1,
+      )} против ${formatPercent(conversion, 1)} в среднем по сайту.`,
+      action: "Проверить креативы, посадочные страницы и релевантность трафика.",
+      severity: "warning",
+      severityLabel: "Предупреждение",
+    });
+  }
+  const channelsWithCustomers = data.channels.filter(
+    (channel) => channel.newCustomers > 0,
+  );
+  if (channelsWithCustomers.length > 0) {
+    const worstCac = channelsWithCustomers
+      .slice()
+      .sort(
+        (a, b) =>
+          b.cost / b.newCustomers - a.cost / a.newCustomers,
+      )[0]!;
+    channelProblems.push({
+      id: `cac-${worstCac.id}`,
+      title: `Высокий CAC: ${worstCac.label}`,
+      detail: `CAC ${formatMoney(
+        worstCac.cost / worstCac.newCustomers,
+      )} при среднем ${formatMoney(cac)}.`,
+      action: "Пересмотреть ставки, аудитории и семантику канала.",
+      severity: "warning",
+      severityLabel: "Предупреждение",
+    });
+  }
+
   return {
     meta: `30 дней · ${formatNumber(totals.visits)} визитов · ${formatDateTime(now)} · Europe/Moscow`,
     note:
@@ -210,6 +271,13 @@ export function getMarketingDashboardView(
     funnel,
     bottleneck,
     channels,
+    channelProblems,
+    forecast: {
+      labels: forecast.map((point) => formatDayMonth(point.date)),
+      visits: forecast.map((point) => point.visits),
+      payments: forecast.map((point) => point.payments),
+      revenue: forecast.map((point) => point.revenue),
+    },
     daily: {
       labels: data.daily.map((point) => formatDayMonth(point.date)),
       visits: data.daily.map((point) => point.visits),

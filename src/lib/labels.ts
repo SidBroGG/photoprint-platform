@@ -47,6 +47,7 @@ export const DEPARTMENT_LABELS: Record<Department, string> = {
   production: "Производство",
   logistics: "Логистика",
   service: "Клиентский сервис",
+  marketing: "Маркетинг",
 };
 
 export type Tone = "success" | "warning" | "error" | "info" | "neutral";

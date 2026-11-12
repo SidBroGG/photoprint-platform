@@ -9,7 +9,9 @@ import { SectionCard } from "@/components/common/SectionCard";
 import { DailyMarketingChart } from "@/components/marketing/DailyMarketingChart";
 import { MarketingBottleneckCard } from "@/components/marketing/MarketingBottleneckCard";
 import { MarketingChannelsTable } from "@/components/marketing/MarketingChannelsTable";
+import { MarketingForecastCharts } from "@/components/marketing/MarketingForecastCharts";
 import { MarketingFunnel } from "@/components/marketing/MarketingFunnel";
+import { MarketingProblemsList } from "@/components/marketing/MarketingProblemsList";
 import type { MarketingDashboardView } from "@/lib/view/marketing";
 
 export function MarketingDashboardScreen({
@@ -32,6 +34,13 @@ export function MarketingDashboardScreen({
             />
           ))}
         </Box>
+
+        <SectionCard
+          title="Прогноз на 21 день"
+          subtitle="Визиты, оплаты и выручка: линейный тренд по 30 дням и сезонность дня недели."
+        >
+          <MarketingForecastCharts forecast={data.forecast} />
+        </SectionCard>
 
         <Box
           className="grid grid-cols-1 lg:grid-cols-2"
@@ -79,6 +88,13 @@ export function MarketingDashboardScreen({
           subtitle="Расход, CAC, выручка и доля канала в общей выручке."
         >
           <MarketingChannelsTable rows={data.channels} />
+        </SectionCard>
+
+        <SectionCard
+          title="Проблемы каналов"
+          subtitle="Каналы с низкой конверсией и высоким CAC: что проверить в первую очередь."
+        >
+          <MarketingProblemsList problems={data.channelProblems} />
         </SectionCard>
       </Stack>
     </>

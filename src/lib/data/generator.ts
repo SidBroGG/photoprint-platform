@@ -83,24 +83,24 @@ interface ProductSeed {
 }
 
 const PRODUCT_SEEDS: ProductSeed[] = [
-  { name: "Классическая фотокнига 20×20", category: "photobooks", price: 3900, cost: 2200, status: "active" },
-  { name: "Премиум-фотокнига 30×30", category: "photobooks", price: 7900, cost: 4200, status: "active" },
-  { name: "Мини-фотокнига 15×15", category: "photobooks", price: 2400, cost: 1400, status: "active" },
-  { name: "Фотокнига «Свадебная»", category: "photobooks", price: 8900, cost: 5000, status: "active" },
-  { name: "Фотокнига «Выпускная»", category: "photobooks", price: 5600, cost: 3100, status: "active" },
-  { name: "Фотокнига «Календарь года»", category: "photobooks", price: 4200, cost: 2500, status: "active" },
-  { name: "Фотокнига «Путешествие»", category: "photobooks", price: 4800, cost: 2800, status: "active" },
-  { name: "Фотокнига «Детская»", category: "photobooks", price: 3600, cost: 2100, status: "active" },
-  { name: "Фотокнига «Юбилейная»", category: "photobooks", price: 6800, cost: 3900, status: "active" },
-  { name: "Фотокнига «Люкс»", category: "photobooks", price: 12900, cost: 7300, status: "discontinued" },
-  { name: "Фотопринт A4", category: "photoproducts", price: 450, cost: 380, status: "active" },
-  { name: "Фотопринт A3", category: "photoproducts", price: 900, cost: 380, status: "active" },
-  { name: "Холст 40×60", category: "photoproducts", price: 3200, cost: 1700, status: "active" },
-  { name: "Пазл фотографический", category: "photoproducts", price: 1500, cost: 700, status: "active" },
-  { name: "Кружка с фото", category: "photoproducts", price: 950, cost: 420, status: "active" },
-  { name: "Календарь настенный", category: "photoproducts", price: 1100, cost: 480, status: "active" },
-  { name: "Фотопанно 60×90", category: "photoproducts", price: 5600, cost: 3100, status: "active" },
-  { name: "Открытки (набор 10 шт.)", category: "photoproducts", price: 700, cost: 300, status: "discontinued" },
+  { name: "Классическая фотокнига 20×20", category: "photobooks", price: 81, cost: 46, status: "active" },
+  { name: "Премиум-фотокнига 30×30", category: "photobooks", price: 169, cost: 95, status: "active" },
+  { name: "Мини-фотокнига 15×15", category: "photobooks", price: 49, cost: 28, status: "active" },
+  { name: "Фотокнига «Свадебная»", category: "photobooks", price: 249, cost: 140, status: "active" },
+  { name: "Фотокнига «Выпускная»", category: "photobooks", price: 139, cost: 78, status: "active" },
+  { name: "Фотокнига «Календарь года»", category: "photobooks", price: 99, cost: 56, status: "active" },
+  { name: "Фотокнига «Путешествие»", category: "photobooks", price: 119, cost: 67, status: "active" },
+  { name: "Фотокнига «Детская»", category: "photobooks", price: 79, cost: 45, status: "active" },
+  { name: "Фотокнига «Юбилейная»", category: "photobooks", price: 169, cost: 95, status: "active" },
+  { name: "Фотокнига «Люкс»", category: "photobooks", price: 299, cost: 168, status: "discontinued" },
+  { name: "Фотопринт A4", category: "photoproducts", price: 5, cost: 4, status: "active" },
+  { name: "Фотопринт A3", category: "photoproducts", price: 11, cost: 6, status: "active" },
+  { name: "Холст 40×60", category: "photoproducts", price: 129, cost: 72, status: "active" },
+  { name: "Пазл фотографический", category: "photoproducts", price: 29, cost: 16, status: "active" },
+  { name: "Кружка с фото", category: "photoproducts", price: 27, cost: 15, status: "active" },
+  { name: "Календарь настенный", category: "photoproducts", price: 29, cost: 16, status: "active" },
+  { name: "Фотопанно 60×90", category: "photoproducts", price: 199, cost: 111, status: "active" },
+  { name: "Открытки (набор 10 шт.)", category: "photoproducts", price: 17, cost: 10, status: "discontinued" },
 ];
 
 interface EmployeeSeed {
@@ -130,6 +130,9 @@ const EMPLOYEE_SEEDS: EmployeeSeed[] = [
   { name: "Роман Кузьмин", department: "logistics", role: "Координатор доставки", dailyNorm: 8 },
   { name: "Ольга Соколова", department: "service", role: "Специалист клиентского сервиса", dailyNorm: 5 },
   { name: "Виктор Павлов", department: "service", role: "Специалист клиентского сервиса", dailyNorm: 7 },
+  { name: "Екатерина Соколова", department: "marketing", role: "Руководитель маркетинга", dailyNorm: 10 },
+  { name: "Алексей Романов", department: "marketing", role: "Менеджер по маркетингу", dailyNorm: 8 },
+  { name: "Полина Крылова", department: "marketing", role: "SMM-специалист", dailyNorm: 6 },
 ];
 
 const MONTH_SEASON = [0.95, 0.9, 1.0, 1.2, 1.3, 1.25, 1.12, 1.18, 1.12, 1.0, 1.22, 1.3];
@@ -340,7 +343,7 @@ export function createDataset(now: Date = new Date(), seed: number = DATA_SEED):
     deliveryMethod: DeliveryMethod;
   }): Order {
     const discount = input.client.segment === "B2B" ? 0.95 : 1;
-    const amount = Math.round((input.product.price * input.quantity * discount) / 10) * 10;
+    const amount = Math.round(input.product.price * input.quantity * discount);
     const cost = input.product.cost * input.quantity;
     const order: Order = {
       id: nextOrderId(),

@@ -9,6 +9,7 @@ export interface ProductRowVM {
   id: string;
   name: string;
   categoryLabel: string;
+  priceLabel: string;
   orders: number;
   revenueLabel: string;
   marginLabel: string;
@@ -68,6 +69,7 @@ export function getProductsView(now: Date = new Date()): ProductsView {
         id: row.product.id,
         name: row.product.name,
         categoryLabel: CATEGORY_LABELS[row.product.category] ?? row.product.category,
+        priceLabel: formatMoney(row.product.price),
         orders: row.orderCount,
         revenueLabel: formatMoney(row.revenue),
         marginLabel: formatPercent(row.marginPct, 1),

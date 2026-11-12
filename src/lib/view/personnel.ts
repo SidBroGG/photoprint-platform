@@ -2,6 +2,7 @@ import type { DemoAccount } from "@/lib/auth/roles";
 import { personnelDepartments } from "@/lib/auth/roles";
 import { getDataset } from "@/lib/data/store";
 import { personnelView } from "@/lib/analytics/personnel";
+import { getIssueStore } from "@/lib/board/store";
 import { DEPARTMENT_LABELS } from "@/lib/labels";
 import { formatDateTime, formatNumber, formatPercent } from "@/lib/format";
 import type { KpiVM } from "@/lib/view/dashboard";
@@ -47,7 +48,10 @@ export function getPersonnelScreenView(
 ): PersonnelScreenView {
   const dataset = getDataset(now);
   const departments = personnelDepartments(account.role);
-  const view = personnelView(dataset, now, departments);
+  const marketingIssues = getIssueStore(now).issues.filter(
+    (issue) => issue.area === "marketing",
+  );
+  const view = personnelView(dataset, now, departments, marketingIssues);
   const employeeById = new Map(dataset.employees.map((employee) => [employee.id, employee]));
   const scopeLabel = departments
     ? departments.map((department) => DEPARTMENT_LABELS[department]).join(", ")

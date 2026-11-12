@@ -13,7 +13,7 @@ export type PageKey =
   | "service"
   | "personnel"
   | "forecast"
-  | "marketing";
+  | "metrics";
 
 export type DashboardDomain = "sales" | "finance" | "production" | "logistics" | "service";
 
@@ -70,22 +70,23 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     roleLabel: "Руководитель маркетинга",
     description:
       "Воронка сайта, каналы привлечения, конверсия, CAC и повторные продажи.",
-    home: "/marketing",
+    home: "/dashboard",
+    employeeId: "e19",
   },
 ];
 
 export const PAGE_ACCESS: Record<PageKey, Role[]> = {
-  dashboard: ["ceo", "sales", "production", "logistics_service"],
-  issues: ["ceo", "sales", "production", "logistics_service"],
+  dashboard: ["ceo", "sales", "production", "logistics_service", "marketing"],
+  metrics: ["ceo", "sales", "production", "logistics_service", "marketing"],
+  issues: ["ceo", "sales", "production", "logistics_service", "marketing"],
   orders: ["ceo", "sales", "production", "logistics_service"],
   customers: ["ceo", "sales"],
   products: ["ceo", "sales"],
   production: ["ceo", "production"],
   logistics: ["ceo", "logistics_service"],
   service: ["ceo", "logistics_service"],
-  personnel: ["ceo", "sales", "production", "logistics_service"],
+  personnel: ["ceo", "sales", "production", "logistics_service", "marketing"],
   forecast: ["ceo", "sales", "production", "logistics_service"],
-  marketing: ["ceo", "marketing"],
 };
 
 export const ROLE_LABELS: Record<Role, string> = {
@@ -105,6 +106,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Обзор", page: "dashboard", icon: "dashboard" },
+  { href: "/metrics", label: "Метрики", page: "metrics", icon: "metrics" },
   { href: "/issues", label: "Канбан", page: "issues", icon: "board" },
   { href: "/orders", label: "Заказы", page: "orders", icon: "orders" },
   { href: "/customers", label: "Клиенты", page: "customers", icon: "customers" },
@@ -114,7 +116,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/service", label: "Клиентский сервис", page: "service", icon: "service" },
   { href: "/personnel", label: "Персонал", page: "personnel", icon: "personnel" },
   { href: "/forecast", label: "Прогноз", page: "forecast", icon: "forecast" },
-  { href: "/marketing", label: "Маркетинг", page: "marketing", icon: "marketing" },
 ];
 
 export function findAccount(id: string): DemoAccount | null {
@@ -125,8 +126,8 @@ export function canAccess(role: Role, page: PageKey): boolean {
   return PAGE_ACCESS[page].includes(role);
 }
 
-export function homeRoute(role: Role): string {
-  return role === "marketing" ? "/marketing" : "/dashboard";
+export function homeRoute(): string {
+  return "/dashboard";
 }
 
 export function navItemsForRole(role: Role): NavItem[] {
@@ -161,7 +162,7 @@ export function personnelDepartments(role: Role): Department[] | undefined {
     case "logistics_service":
       return ["logistics", "service"];
     case "marketing":
-      return undefined;
+      return ["marketing"];
     default:
       return undefined;
   }

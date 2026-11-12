@@ -17,7 +17,7 @@ export async function login(formData: FormData): Promise<void> {
     path: "/",
     maxAge: SESSION_MAX_AGE,
   });
-  redirect(homeRoute(account.role));
+  redirect(homeRoute());
 }
 
 export async function logout(): Promise<void> {

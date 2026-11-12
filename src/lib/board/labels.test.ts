@@ -14,15 +14,22 @@ describe("issue board labels and scope", () => {
       "production",
       "logistics",
       "service",
+      "marketing",
     ]);
     expect(visibleIssueAreas("sales")).toEqual(["sales"]);
     expect(visibleIssueAreas("production")).toEqual(["production"]);
     expect(visibleIssueAreas("logistics_service")).toEqual(["logistics", "service"]);
-    expect(visibleIssueAreas("marketing")).toEqual([]);
+    expect(visibleIssueAreas("marketing")).toEqual(["marketing"]);
   });
 
   test("labels every category", () => {
-    const areas: IssueArea[] = ["sales", "production", "logistics", "service"];
+    const areas: IssueArea[] = [
+      "sales",
+      "production",
+      "logistics",
+      "service",
+      "marketing",
+    ];
     for (const area of areas) {
       expect(ISSUE_AREA_LABELS[area].length).toBeGreaterThan(0);
     }

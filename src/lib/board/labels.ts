@@ -2,7 +2,13 @@ import type { Role } from "@/lib/auth/roles";
 import type { Tone } from "@/lib/labels";
 import type { IssueArea, IssueCriticality, IssueStatus } from "@/types/board";
 
-export const ISSUE_AREAS: IssueArea[] = ["sales", "production", "logistics", "service"];
+export const ISSUE_AREAS: IssueArea[] = [
+  "sales",
+  "production",
+  "logistics",
+  "service",
+  "marketing",
+];
 
 export const ISSUE_STATUSES: IssueStatus[] = ["new", "in_progress", "done"];
 
@@ -18,6 +24,7 @@ export const ISSUE_AREA_LABELS: Record<IssueArea, string> = {
   production: "Производство",
   logistics: "Логистика",
   service: "Клиентский сервис",
+  marketing: "Маркетинг",
 };
 
 export const ISSUE_STATUS_LABELS: Record<IssueStatus, string> = {
@@ -44,7 +51,7 @@ export function visibleIssueAreas(role: Role): IssueArea[] {
     case "logistics_service":
       return ["logistics", "service"];
     case "marketing":
-      return [];
+      return ["marketing"];
   }
 }
 

@@ -71,6 +71,12 @@ describe("view models respect role restrictions", () => {
       true,
     );
 
+    const marketing = getPersonnelScreenView(findAccount("marketing")!, NOW);
+    expect(marketing.scopeLabel).toBe("Маркетинг");
+    expect(marketing.rows.every((row) => row.departmentLabel === "Маркетинг")).toBe(
+      true,
+    );
+
     const ceo = getPersonnelScreenView(findAccount("ceo")!, NOW);
     expect(ceo.scopeLabel).toBe("Все отделы");
     expect(ceo.rows.length).toBe(dataset.employees.length);
@@ -79,8 +85,8 @@ describe("view models respect role restrictions", () => {
   test("scopes the issue board by role and category", () => {
     resetIssueStore();
     const ceo = getIssueBoardView(findAccount("ceo")!, NOW);
-    expect(new Set(ceo.issues.map((issue) => issue.area)).size).toBe(4);
-    expect(ceo.areas).toHaveLength(4);
+    expect(new Set(ceo.issues.map((issue) => issue.area)).size).toBe(5);
+    expect(ceo.areas).toHaveLength(5);
 
     const sales = getIssueBoardView(findAccount("sales")!, NOW);
     expect(sales.issues.every((issue) => issue.area === "sales")).toBe(true);
@@ -96,6 +102,10 @@ describe("view models respect role restrictions", () => {
         (issue) => issue.area === "logistics" || issue.area === "service",
       ),
     ).toBe(true);
+
+    const marketing = getIssueBoardView(findAccount("marketing")!, NOW);
+    expect(marketing.areas.map((area) => area.area)).toEqual(["marketing"]);
+    expect(marketing.issues.every((issue) => issue.area === "marketing")).toBe(true);
   });
 
   test("enables forecast sections by role", () => {
@@ -140,6 +150,11 @@ describe("view models respect role restrictions", () => {
     expect(marketing.bottleneck?.stageLabel).toBe("Изменение шаблона");
     expect(marketing.kpis.map((kpi) => kpi.label)).toContain("CAC");
     expect(marketing.channels).toHaveLength(5);
+    expect(marketing.channelProblems.length).toBeGreaterThan(0);
+    expect(marketing.forecast.labels).toHaveLength(21);
+    expect(marketing.forecast.visits).toHaveLength(21);
+    expect(marketing.forecast.payments).toHaveLength(21);
+    expect(marketing.forecast.revenue).toHaveLength(21);
     expect(marketing.daily.labels).toHaveLength(30);
     expect(marketing.daily.visits).toHaveLength(30);
     expect(marketing.daily.payments).toHaveLength(30);
@@ -149,5 +164,65 @@ describe("view models respect role restrictions", () => {
     expect(marketing.daily.payments.reduce((sum, value) => sum + value, 0)).toBe(
       totalPayments,
     );
+  });
+
+  test("adds role-specific forecast charts and current problems", () => {
+    resetIssueStore();
+
+    const ceo = getDashboardView(findAccount("ceo")!, NOW);
+    expect(ceo.forecastCharts.map((chart) => chart.chart)).toEqual([
+      "daily",
+      "stage",
+      "longTerm",
+    ]);
+    expect(ceo.problems.length).toBeGreaterThan(0);
+    expect(ceo.problemsTotal).toBeGreaterThanOrEqual(ceo.problems.length);
+    expect(ceo.problemsHref).toBe("/issues");
+
+    const sales = getDashboardView(findAccount("sales")!, NOW);
+    expect(sales.forecastCharts.map((chart) => chart.chart)).toEqual([
+      "daily",
+      "daily",
+      "longTerm",
+    ]);
+    expect(sales.problems.every((problem) => problem.areaLabel === "Продажи")).toBe(
+      true,
+    );
+
+    const production = getDashboardView(findAccount("production")!, NOW);
+    expect(production.forecastCharts.map((chart) => chart.chart)).toEqual([
+      "stage",
+      "daily",
+      "longTerm",
+    ]);
+    expect(
+      production.problems.every((problem) => problem.areaLabel === "Производство"),
+    ).toBe(true);
+
+    const logistics = getDashboardView(findAccount("service")!, NOW);
+    expect(logistics.forecastCharts.map((chart) => chart.chart)).toEqual([
+      "shipments",
+      "stage",
+      "longTerm",
+    ]);
+    expect(
+      logistics.problems.every(
+        (problem) =>
+          problem.areaLabel === "Логистика" ||
+          problem.areaLabel === "Клиентский сервис",
+      ),
+    ).toBe(true);
+
+    const marketing = getDashboardView(findAccount("marketing")!, NOW);
+    expect(marketing.forecastCharts.map((chart) => chart.chart)).toEqual([
+      "daily",
+      "daily",
+      "daily",
+    ]);
+    expect(
+      marketing.problems.every((problem) => problem.areaLabel === "Маркетинг"),
+    ).toBe(true);
+    expect(marketing.problemsHref).toBe("/issues");
+    expect(marketing.showForecastLink).toBe(false);
   });
 });

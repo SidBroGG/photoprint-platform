@@ -1,5 +1,11 @@
 import type { Dataset, Department, Employee } from "@/types/domain";
+import type { IssueStatus } from "@/types/board";
 import { overdueProductionOrders, overdueTickets, openTickets } from "@/lib/analytics/metrics";
+
+export interface PersonnelMarketingIssue {
+  assigneeName: string | null;
+  status: IssueStatus;
+}
 
 export interface OverdueItem {
   id: string;
@@ -40,6 +46,7 @@ export function personnelView(
   dataset: Dataset,
   now: Date,
   departments?: Department[],
+  marketingIssues: readonly PersonnelMarketingIssue[] = [],
 ): PersonnelView {
   const allowedDepartments = departments ? new Set(departments) : null;
   const employees = dataset.employees.filter(
@@ -110,6 +117,11 @@ export function personnelView(
           });
         }
       }
+    } else if (employee.department === "marketing") {
+      const assigned = marketingIssues.filter(
+        (issue) => issue.assigneeName === employee.name && issue.status !== "done",
+      );
+      activeTasks = assigned.length;
     } else {
       const assigned = openTickets(dataset.tickets).filter(
         (ticket) => ticket.assigneeId === employee.id,

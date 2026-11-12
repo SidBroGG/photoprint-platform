@@ -26,6 +26,11 @@ const SERVICE: IssueActor = {
   name: "Дмитрий Орлов",
   role: "logistics_service",
 };
+const MARKETING: IssueActor = {
+  id: "marketing",
+  name: "Екатерина Соколова",
+  role: "marketing",
+};
 
 describe("issue store", () => {
   beforeEach(() => {
@@ -34,10 +39,16 @@ describe("issue store", () => {
 
   test("seeds four tasks per category with unique IDs", () => {
     const issues = createSeedIssues(NOW);
-    expect(issues).toHaveLength(16);
+    expect(issues).toHaveLength(20);
     const ids = issues.map((issue) => issue.id);
     expect(new Set(ids).size).toBe(ids.length);
-    for (const area of ["sales", "production", "logistics", "service"] as const) {
+    for (const area of [
+      "sales",
+      "production",
+      "logistics",
+      "service",
+      "marketing",
+    ] as const) {
       expect(issues.filter((issue) => issue.area === area)).toHaveLength(4);
     }
     for (const status of ["new", "in_progress", "done"] as const) {
@@ -70,6 +81,16 @@ describe("issue store", () => {
     )!;
     expect(claimIssue(state, SALES, productionIssue.id).ok).toBe(false);
     expect(claimIssue(state, PRODUCTION, productionIssue.id).ok).toBe(true);
+  });
+
+  test("lets marketing work only with marketing tasks", () => {
+    const state = getIssueStore(NOW);
+    const marketingIssue = state.issues.find(
+      (item) => item.area === "marketing" && item.assigneeId === null,
+    )!;
+    expect(claimIssue(state, SALES, marketingIssue.id).ok).toBe(false);
+    expect(claimIssue(state, PRODUCTION, marketingIssue.id).ok).toBe(false);
+    expect(claimIssue(state, MARKETING, marketingIssue.id).ok).toBe(true);
   });
 
   test("creates a task in an allowed category and validates input", () => {

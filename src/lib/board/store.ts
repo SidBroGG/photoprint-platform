@@ -38,6 +38,7 @@ interface SeedIssueInput {
   status: IssueStatus;
   criticality: IssueCriticality;
   assigneeId: string | null;
+  assigneeName?: string;
   createdById: string;
   createdHoursAgo: number;
   updatedHoursAgo: number;
@@ -234,6 +235,56 @@ const SEED_ISSUES: SeedIssueInput[] = [
     createdHoursAgo: 144,
     updatedHoursAgo: 60,
   },
+  {
+    area: "marketing",
+    title: "Запустить новогоднюю кампанию",
+    description:
+      "Подготовить креативы и посадочную страницу к сезону фотокниг и календарей. Согласовать бюджет и сроки запуска.",
+    status: "in_progress",
+    criticality: "critical",
+    assigneeId: "marketing",
+    createdById: "ceo",
+    createdHoursAgo: 8,
+    updatedHoursAgo: 1,
+  },
+  {
+    area: "marketing",
+    title: "Низкая конверсия соцсетей",
+    description:
+      "Конверсия соцсетей 13,7% против 18,5% в среднем по сайту. Проверить креативы, аудитории и посадочные страницы.",
+    status: "new",
+    criticality: "high",
+    assigneeId: null,
+    createdById: "marketing",
+    createdHoursAgo: 14,
+    updatedHoursAgo: 14,
+  },
+  {
+    area: "marketing",
+    title: "Пересмотреть ставки платного поиска",
+    description:
+      "CAC платного поиска выше среднего. Проверить ставки, семантику и распределение бюджета между кампаниями.",
+    status: "in_progress",
+    criticality: "medium",
+    assigneeId: "e20",
+    assigneeName: "Алексей Романов",
+    createdById: "marketing",
+    createdHoursAgo: 28,
+    updatedHoursAgo: 4,
+  },
+  {
+    area: "marketing",
+    title: "Обновить шаблоны email-рассылки",
+    description:
+      "Шаблоны писем для повторных продаж обновлены, проверены на мобильных устройствах и согласованы.",
+    status: "done",
+    criticality: "low",
+    assigneeId: "e21",
+    assigneeName: "Полина Крылова",
+    createdById: "marketing",
+    createdHoursAgo: 120,
+    updatedHoursAgo: 48,
+  },
 ];
 
 function issueNumberId(number: number): string {
@@ -256,7 +307,8 @@ export function createSeedIssues(now: Date): Issue[] {
       status: seed.status,
       criticality: seed.criticality,
       assigneeId: seed.assigneeId,
-      assigneeName: seed.assigneeId ? accountName(seed.assigneeId) : null,
+      assigneeName:
+        seed.assigneeName ?? (seed.assigneeId ? accountName(seed.assigneeId) : null),
       createdById: seed.createdById,
       createdByName: accountName(seed.createdById),
       createdAt: addHours(now, -seed.createdHoursAgo),
